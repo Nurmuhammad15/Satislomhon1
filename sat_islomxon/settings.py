@@ -50,11 +50,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sat_islomxon.wsgi.application'
 
+import dj_database_url
+
+DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://neondb_owner:npg_0h8FyBSsmdxK@ep-odd-pine-aqfxse8x.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require')
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/tmp/db.sqlite3',
-    }
+    'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
 }
 
 LANGUAGE_CODE = 'uz'

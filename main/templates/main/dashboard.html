@@ -377,7 +377,7 @@
 
         @media (max-width: 900px) {
             .sidebar { display: none; }
-            .main-content { margin-left: 0; padding: 16px; padding-bottom: 80px; }
+            .main-content { margin-left: 0; padding: 16px; }
             .calc-layout { grid-template-columns: 1fr; }
             .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
             .time-options { grid-template-columns: 1fr 1fr; }
@@ -394,24 +394,6 @@
             .modal-overlay.open .modal { transform: translateY(0) !important; }
             .practice-options { grid-template-columns: 1fr 1fr; }
         }
-
-        /* Bottom navigation for mobile */
-        .bottom-nav {
-            display: none;
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: var(--white); border-top: 1px solid var(--border);
-            z-index: 200; padding: 8px 0 env(safe-area-inset-bottom, 8px);
-        }
-        .bottom-nav-inner { display: flex; justify-content: space-around; }
-        .bnav-btn {
-            display: flex; flex-direction: column; align-items: center; gap: 3px;
-            background: none; border: none; cursor: pointer; padding: 6px 12px;
-            font-family: var(--font); color: var(--muted); font-size: 0.65rem; font-weight: 600;
-            transition: color 0.15s; min-width: 60px;
-        }
-        .bnav-btn.active { color: var(--accent); }
-        .bnav-btn svg { width: 22px; height: 22px; }
-        @media (max-width: 900px) { .bottom-nav { display: block; } }
     </style>
 </head>
 <body>
@@ -499,12 +481,12 @@
                 <div class="stat-mini blue">
                     <div class="stat-mini-label">Eng yuqori ball</div>
                     <div class="stat-mini-val">—</div>
-                    <div class="stat-mini-sub">Hali test yo'q</div>
+                    <div class="stat-mini-sub">Test yechib ko'ring!</div>
                 </div>
                 <div class="stat-mini">
                     <div class="stat-mini-label">O'rtacha ball</div>
                     <div class="stat-mini-val">—</div>
-                    <div class="stat-mini-sub">Hali test yo'q</div>
+                    <div class="stat-mini-sub">Rivojlanishni kuzating</div>
                 </div>
                 <div class="stat-mini">
                     <div class="stat-mini-label">Tugatilgan</div>
@@ -514,7 +496,7 @@
                 <div class="stat-mini green">
                     <div class="stat-mini-label">O'rtacha aniqlik</div>
                     <div class="stat-mini-val">—</div>
-                    <div class="stat-mini-sub">Hali test yo'q</div>
+                    <div class="stat-mini-sub">Aniqlikni oshiring</div>
                 </div>
             </div>
 
@@ -583,33 +565,30 @@
                 <div class="card">
                     <div class="card-title">Ball Dinamikasi</div>
                     <div class="card-sub">Vaqt o'tishi bilan to'liq test ballari</div>
-                    <div class="chart-area">Birinchi testni bajaring — natijalar shu yerda ko'rinadi</div>
+                    <div class="chart-area" style="flex-direction:column;gap:12px;padding:24px">
+                        <div style="font-size:2rem">📈</div>
+                        <div style="font-weight:700;font-size:0.9rem;color:var(--text)">Hozircha ma'lumot yo'q</div>
+                        <div style="font-size:0.8rem;color:var(--muted);text-align:center;max-width:200px">Birinchi testni yechganingizdan so'ng ball dinamikasi shu yerda ko'rinadi</div>
+                    </div>
                 </div>
                 <div class="card">
                     <div class="card-title">Amaliy Aniqlik</div>
                     <div class="card-sub">Har bir modul bo'yicha aniqlik (%)</div>
-                    <div class="chart-area" style="flex-direction:column;gap:8px">
-                        <div style="width:100%;display:flex;align-items:flex-end;gap:40px;padding:0 24px;height:80px">
-                            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-                                <div style="width:32px;background:#e2e8f0;border-radius:4px 4px 0 0;height:4px"></div>
-                                <span style="font-size:0.7rem;color:var(--muted)">Amaliy 1</span>
-                            </div>
-                            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-                                <div style="width:32px;background:#e2e8f0;border-radius:4px 4px 0 0;height:4px"></div>
-                                <span style="font-size:0.7rem;color:var(--muted)">Amaliy 2</span>
-                            </div>
-                            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-                                <div style="width:32px;background:#e2e8f0;border-radius:4px 4px 0 0;height:4px"></div>
-                                <span style="font-size:0.7rem;color:var(--muted)">Amaliy 3</span>
-                            </div>
-                        </div>
+                    <div class="chart-area" style="flex-direction:column;gap:12px;padding:24px">
+                        <div style="font-size:2rem">🎯</div>
+                        <div style="font-weight:700;font-size:0.9rem;color:var(--text)">Modul bo'yicha aniqlik</div>
+                        <div style="font-size:0.8rem;color:var(--muted);text-align:center;max-width:220px">Reading, Writing va Math bo'yicha aniqlik foizingiz test yechgach ko'rinadi</div>
                     </div>
                 </div>
             </div>
             <div class="card">
                 <div class="card-title">Vaqt Boshqaruvi</div>
                 <div class="card-sub">Har bir test uchun sarflangan o'rtacha vaqt (daqiqa)</div>
-                <div class="chart-area">Birinchi testni bajaring — vaqt statistikasi shu yerda ko'rinadi</div>
+                <div class="chart-area" style="flex-direction:column;gap:12px;padding:24px">
+                        <div style="font-size:2rem">⏱️</div>
+                        <div style="font-weight:700;font-size:0.9rem;color:var(--text)">Vaqt statistikasi</div>
+                        <div style="font-size:0.8rem;color:var(--muted);text-align:center;max-width:220px">Test yechgach har bir modul uchun sarflagan vaqtingiz tahlil qilinadi</div>
+                    </div>
             </div>
         </div>
 
@@ -984,10 +963,6 @@
         const sidebarMap = { practice: 0, history: 1, studyplan: 2, calc: 3 };
         const items = document.querySelectorAll('.sidebar-item');
         if (items[sidebarMap[name]]) items[sidebarMap[name]].classList.add('active');
-        // Sync bottom nav
-        document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
-        const bnav = document.getElementById('bnav-' + name);
-        if (bnav) bnav.classList.add('active');
         window.scrollTo(0, 0);
     }
 
@@ -1066,27 +1041,5 @@
         document.getElementById('modal-timing').textContent = 'Vaqt: ' + timeMult + 'x';
     }
 </script>
-<!-- BOTTOM NAV (mobile only) -->
-<nav class="bottom-nav">
-    <div class="bottom-nav-inner">
-        <button class="bnav-btn active" id="bnav-practice" onclick="setTab('practice')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-            Testlar
-        </button>
-        <button class="bnav-btn" id="bnav-history" onclick="setTab('history')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Tarix
-        </button>
-        <button class="bnav-btn" id="bnav-studyplan" onclick="setTab('studyplan')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            Reja
-        </button>
-        <button class="bnav-btn" id="bnav-calc" onclick="setTab('calc')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
-            Score
-        </button>
-    </div>
-</nav>
-
 </body>
 </html>

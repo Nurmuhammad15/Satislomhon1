@@ -1,0 +1,735 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAT Islomxon — Yuqori Ball Oling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #ffffff;
+            --surface: #f8f9fb;
+            --surface2: #f1f3f7;
+            --accent: #2563eb;
+            --accent-light: #eff4ff;
+            --accent2: #1d4ed8;
+            --gold: #d97706;
+            --gold-light: #fef3c7;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --font: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 16px;
+            line-height: 1.7;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 60px;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-weight: 800; font-size: 1.2rem; color: var(--text); text-decoration: none; }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 32px; list-style: none; }
+        .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { display: flex; gap: 10px; align-items: center; }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; border: none; cursor: pointer; font-family: var(--font); font-weight: 600; transition: all 0.2s; text-decoration: none; font-size: 0.9rem; border-radius: 8px; }
+        .btn-ghost { background: transparent; color: var(--muted); padding: 9px 18px; border: 1px solid var(--border); }
+        .btn-ghost:hover { color: var(--text); border-color: #cbd5e1; background: var(--surface); }
+        .btn-primary { background: var(--accent); color: #fff; padding: 10px 22px; }
+        .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.25); }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 60px 80px;
+            background: var(--bg);
+        }
+        .hero-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+        .hero-tag {
+            display: inline-block;
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            margin-bottom: 22px;
+            letter-spacing: 0.3px;
+        }
+        .hero h1 {
+            font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 18px;
+            color: var(--text);
+        }
+        .hero h1 em { color: var(--accent); font-style: normal; }
+        .hero p { color: var(--muted); font-size: 1.05rem; max-width: 460px; margin-bottom: 34px; line-height: 1.75; }
+        .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn-hero { padding: 13px 28px; font-size: 0.95rem; border-radius: 9px; }
+        .btn-outline-hero {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 13px 24px;
+            border-radius: 9px;
+            font-size: 0.95rem;
+            text-decoration: none;
+            font-family: var(--font);
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-outline-hero:hover { background: var(--surface); border-color: #cbd5e1; }
+
+        /* Score card */
+        .hero-visual { display: flex; justify-content: center; }
+        .score-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            width: 320px;
+        }
+        .score-card-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 16px; }
+        .score-big { font-size: 4rem; font-weight: 800; color: var(--text); line-height: 1; margin-bottom: 4px; }
+        .score-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 24px; }
+        .score-bars { display: flex; flex-direction: column; gap: 14px; }
+        .bar-row label { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+        .bar-track { background: #e2e8f0; border-radius: 100px; height: 6px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 100px; transform-origin: left; animation: barGrow 1.4s ease both; }
+        .bar-math { background: var(--accent); width: 100%; }
+        .bar-rw { background: var(--gold); width: 87.5%; animation-delay: 0.2s; }
+        @keyframes barGrow { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+        .score-numbers { display: flex; gap: 16px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+        .score-num-item strong { display: block; font-size: 1.1rem; font-weight: 800; color: var(--text); }
+        .score-num-item span { font-size: 0.72rem; color: var(--muted); font-weight: 500; }
+
+        @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+        /* STATS */
+        .stats-strip {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 44px 60px;
+        }
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+        }
+        .stat-item { text-align: center; padding: 0 16px; border-right: 1px solid var(--border); }
+        .stat-item:last-child { border-right: none; }
+        .stat-num { font-size: 2.2rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 6px; }
+        .stat-label { font-size: 0.8rem; color: var(--muted); line-height: 1.4; font-weight: 500; }
+
+        /* SECTIONS */
+        section { padding: 96px 60px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+        .section-title { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; line-height: 1.2; margin-bottom: 14px; color: var(--text); }
+        .section-sub { color: var(--muted); font-size: 1rem; max-width: 500px; line-height: 1.75; }
+
+        /* COURSES */
+        #courses { background: var(--surface); }
+        .courses-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; flex-wrap: wrap; gap: 20px; }
+        .courses-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 1000px; }
+        .course-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            transition: all 0.25s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .course-icon {
+            width: 52px; height: 52px;
+            background: #f0f0ff;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px;
+        }
+        .course-tagline {
+            font-size: 0.875rem;
+            color: var(--muted);
+            margin-bottom: 22px;
+            line-height: 1.5;
+            border-bottom: 2px solid #fde68a;
+            padding-bottom: 4px;
+            display: inline-block;
+        }
+        .course-photo {
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .course-photo-placeholder {
+            height: 180px;
+            background: var(--surface);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 10px; color: var(--muted); font-size: 0.85rem;
+        }
+        .course-tags { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+        .course-tag-row { display: flex; align-items: center; gap: 12px; }
+        .ctag {
+            background: #ede9fe; color: #6366f1;
+            font-size: 0.75rem; font-weight: 700;
+            padding: 5px 12px; border-radius: 100px;
+            white-space: nowrap;
+        }
+        .ctag-text { color: var(--muted); font-size: 0.875rem; }
+        .card-btn-new {
+            display: block; width: 100%; text-align: center;
+            background: #ede9fe;
+            color: #6366f1;
+            padding: 14px;
+            border-radius: 10px; font-size: 0.9rem;
+            font-family: var(--font); font-weight: 700;
+            cursor: pointer; transition: all 0.2s; text-decoration: none;
+            margin-top: auto;
+        }
+        .card-btn-new:hover { background: #6366f1; color: #fff; }
+        .course-card:hover { border-color: #bfdbfe; box-shadow: 0 12px 40px rgba(37,99,235,0.08); transform: translateY(-3px); }
+        .course-card.featured { border-color: #bfdbfe; background: var(--accent-light); }
+        .featured-badge {
+            position: absolute; top: 18px; right: 18px;
+            background: var(--accent); color: #fff;
+            font-size: 0.68rem; font-weight: 700;
+            padding: 4px 10px; border-radius: 5px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .course-num { font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; color: var(--accent); text-transform: uppercase; margin-bottom: 14px; }
+        .course-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+        .course-card > p { color: var(--muted); font-size: 0.875rem; margin-bottom: 22px; line-height: 1.7; }
+        .course-features { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; flex: 1; }
+        .course-features li {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 0.875rem; color: var(--muted);
+        }
+        .course-features li::before {
+            content: '';
+            width: 5px; height: 5px;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .card-btn {
+            display: block; width: 100%; text-align: center;
+            background: var(--surface2); border: 1px solid var(--border);
+            color: var(--text); padding: 11px;
+            border-radius: 8px; font-size: 0.875rem;
+            font-family: var(--font); font-weight: 600;
+            cursor: pointer; transition: all 0.2s; text-decoration: none;
+        }
+        .course-card.featured .card-btn { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .card-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+        /* RESOURCES */
+        #resources { background: var(--bg); }
+        .resources-split { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .resources-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .resource-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px; padding: 26px;
+            transition: border-color 0.2s;
+        }
+        .resource-card:hover { border-color: #bfdbfe; }
+        .resource-num { font-size: 1.5rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+        .resource-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+        .resource-card p { color: var(--muted); font-size: 0.82rem; line-height: 1.65; }
+
+        /* CALCULATOR */
+        #calculator { background: var(--surface); }
+        .calc-inner { max-width: 580px; margin: 0 auto; text-align: center; }
+        .calc-box { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 44px; margin-top: 44px; }
+        .calc-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px; }
+        .input-group label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 7px; font-weight: 600; text-align: left; }
+        .input-group input {
+            width: 100%; background: var(--surface); border: 1px solid var(--border);
+            color: var(--text); padding: 13px 16px; border-radius: 10px;
+            font-family: var(--font); font-size: 1rem; font-weight: 600;
+            text-align: center; transition: border-color 0.2s; outline: none;
+        }
+        .input-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .input-group input::placeholder { color: #cbd5e1; font-weight: 400; }
+        .calc-result {
+            background: var(--accent-light); border: 1px solid #bfdbfe;
+            border-radius: 14px; padding: 26px; margin-bottom: 18px;
+        }
+        .result-label { font-size: 0.72rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 10px; }
+        .result-score { font-size: 3.2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+        .result-max { color: var(--muted); font-size: 0.85rem; margin-top: 5px; }
+        .btn-calc { width: 100%; background: var(--accent); color: #fff; padding: 14px; border-radius: 10px; font-size: 0.95rem; font-weight: 700; font-family: var(--font); border: none; cursor: pointer; transition: all 0.2s; }
+        .btn-calc:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.25); }
+
+        /* FAQ */
+        #faq { background: var(--bg); }
+        .faq-split { display: grid; grid-template-columns: 1fr 1.6fr; gap: 80px; align-items: start; }
+        .faq-list { display: flex; flex-direction: column; gap: 8px; }
+        .faq-item { border: 1px solid var(--border); border-radius: 12px; transition: border-color 0.2s, box-shadow 0.2s; background: var(--bg); }
+        .faq-item.open { border-color: #bfdbfe; box-shadow: 0 4px 16px rgba(37,99,235,0.07); }
+        .faq-q { padding: 20px 22px; font-size: 0.93rem; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; user-select: none; color: var(--text); border-radius: 12px; }
+        .faq-q:hover { color: var(--accent); }
+        .faq-toggle {
+            width: 28px; height: 28px; flex-shrink: 0;
+            background: #f1f5f9; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; font-weight: 400; color: var(--muted);
+            transition: background 0.2s, color 0.2s;
+            line-height: 1; font-family: monospace;
+        }
+        .faq-item.open .faq-toggle { background: var(--accent); color: #fff; }
+        .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+        .faq-a-inner { padding: 0 22px 20px; color: var(--muted); font-size: 0.9rem; line-height: 1.8; border-top: 1px solid var(--border); padding-top: 16px; margin: 0 22px; padding-left: 0; padding-right: 0; }
+        .faq-item.open .faq-a { max-height: 300px; }
+
+        /* ABOUT */
+        #about { background: var(--surface); }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .about-card { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 36px; }
+        .founder-avatar {
+            width: 52px; height: 52px;
+            background: var(--accent); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; font-weight: 800; color: #fff;
+            margin-bottom: 18px;
+        }
+        .founder-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+        .founder-role { color: var(--accent); font-size: 0.85rem; font-weight: 600; margin-bottom: 16px; }
+        .about-p { color: var(--muted); font-size: 0.9rem; line-height: 1.75; }
+        .about-stats { display: flex; gap: 28px; margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--border); }
+        .about-stat strong { display: block; font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+        .about-stat span { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
+
+        /* CONTACT */
+        #contact { background: var(--bg); }
+        .contact-split { display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: start; }
+        .contact-channels { display: flex; flex-direction: column; gap: 10px; margin-top: 32px; }
+        .channel-item {
+            display: flex; align-items: center; gap: 14px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px 20px;
+            text-decoration: none; color: var(--text); transition: all 0.2s;
+        }
+        .channel-item:hover { border-color: #bfdbfe; transform: translateX(4px); }
+        .channel-letter {
+            width: 38px; height: 38px; border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.8rem; flex-shrink: 0;
+        }
+        .channel-letter.tg { background: #e0f0fb; color: #0088cc; }
+        .channel-letter.ig { background: #fce7f3; color: #c2185b; }
+        .channel-letter.yt { background: #fee2e2; color: #dc2626; }
+        .channel-name { font-weight: 600; font-size: 0.875rem; margin-bottom: 2px; color: var(--text); }
+        .channel-handle { color: var(--muted); font-size: 0.78rem; }
+
+        .contact-form-box { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 36px; }
+        .contact-form-box h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 22px; color: var(--text); }
+        .form-input {
+            width: 100%; background: var(--bg); border: 1px solid var(--border);
+            color: var(--text); padding: 12px 15px; border-radius: 9px;
+            font-family: var(--font); font-size: 0.9rem; outline: none;
+            transition: border-color 0.2s; display: block; margin-bottom: 12px; resize: vertical;
+        }
+        .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.08); }
+        .form-input::placeholder { color: #cbd5e1; }
+        .messages-bar { background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; padding: 11px 16px; border-radius: 8px; margin-bottom: 18px; font-size: 0.875rem; font-weight: 500; }
+
+        /* FOOTER */
+        footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 32px 60px;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;
+        }
+        footer p { color: var(--muted); font-size: 0.85rem; }
+        footer a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+        footer a:hover { color: var(--accent); }
+
+        /* MOBILE */
+        @media (max-width: 900px) {
+            nav { padding: 14px 20px; }
+            .nav-links { display: none; }
+            .hero { padding: 100px 20px 60px; }
+            .hero-inner { grid-template-columns: 1fr; gap: 0; }
+            .hero-visual { display: none; }
+            .stats-strip { padding: 36px 20px; }
+            .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 0; }
+            .stat-item { border-right: none; padding-bottom: 16px; }
+            section { padding: 64px 20px; }
+            .courses-grid { grid-template-columns: 1fr; max-width: 100%; }
+            .resources-split, .faq-split, .about-grid, .contact-split { grid-template-columns: 1fr; gap: 32px; }
+            .calc-inputs { grid-template-columns: 1fr; }
+            .courses-header { flex-direction: column; align-items: flex-start; }
+            footer { padding: 24px 20px; flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav id="navbar">
+    <a href="#" class="logo">SAT <span>Islomxon</span></a>
+    <ul class="nav-links">
+        <li><a href="#courses">Kurslar</a></li>
+        <li><a href="#resources">Resurslar</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#about">Biz haqimizda</a></li>
+        <li><a href="#contact">Bog'lanish</a></li>
+    </ul>
+    <div class="nav-cta">
+        {% if user.is_authenticated %}
+        <div class="user-avatar-wrap" style="position:relative">
+            <div class="user-avatar" id="userAvatarBtn" onclick="toggleDropdown()" title="{{ user.get_full_name|default:user.username }}" style="width:38px;height:38px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:0.85rem;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid var(--border);transition:border-color 0.2s,box-shadow 0.2s;user-select:none;">
+                {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+            </div>
+            <div class="user-dropdown" id="userDropdown" style="position:absolute;top:calc(100% + 10px);right:0;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:8px;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,0.1);display:none;z-index:200;">
+                <div style="padding:10px 12px 14px;border-bottom:1px solid var(--border);margin-bottom:6px;">
+                    <div style="font-weight:700;font-size:0.95rem;color:var(--text);">{{ user.get_full_name|default:user.username }}</div>
+                    <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;">@{{ user.username }}</div>
+                </div>
+                <a href="{% url 'dashboard' %}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:0.875rem;font-weight:500;color:var(--text);text-decoration:none;transition:background 0.15s;">Shaxsiy kabinet</a>
+                <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+                <form method="POST" action="{% url 'logout' %}" style="display:block">
+                    {% csrf_token %}
+                    <button type="submit" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:0.875rem;font-weight:500;color:#dc2626;background:none;border:none;width:100%;font-family:var(--font);cursor:pointer;">Chiqish</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn btn-ghost">Kirish</a>
+        <a href="{% url 'register' %}" class="btn btn-primary">Boshlash</a>
+        {% endif %}
+    </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-inner">
+        <div>
+            <h1>SAT da <em>Yuqori Ball</em> Oling.</h1>
+            <p>Islomxon Saidov jamoasi bilan isbot qilingan strategiyalar orqali SAT imtihoniga professional tayyorlaning. Online va Offline kurslar mavjud.</p>
+            <div class="hero-actions">
+                <a href="{% url 'register' %}" class="btn btn-primary btn-hero">Ro'yxatdan O'tish</a>
+                <a href="https://t.me/satislomxonadmin" target="_blank" class="btn-outline-hero">Telegram orqali bog'lanish</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="score-card">
+                <div class="score-card-label">O'quvchi natijalari</div>
+                <div class="score-big">1560</div>
+                <div class="score-sub">SAT Umumiy Ball</div>
+                <div class="score-bars">
+                    <div class="bar-row">
+                        <label><span>Math</span><span>800 / 800</span></label>
+                        <div class="bar-track"><div class="bar-fill bar-math"></div></div>
+                    </div>
+                    <div class="bar-row">
+                        <label><span>Reading & Writing</span><span>760 / 800</span></label>
+                        <div class="bar-track"><div class="bar-fill bar-rw"></div></div>
+                    </div>
+                </div>
+                <div class="score-numbers">
+                    <div class="score-num-item"><strong>53 ta</strong><span>1400+ ball</span></div>
+                    <div class="score-num-item"><strong>10 ta</strong><span>Perfect Math</span></div>
+                    <div class="score-num-item"><strong>500+</strong><span>Talabalar</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-strip">
+    <div class="stats-grid">
+        <div class="stat-item"><div class="stat-num">53</div><div class="stat-label">SAT 1400+ / 1600</div></div>
+        <div class="stat-item"><div class="stat-num">10</div><div class="stat-label">SAT Math 800 / 800</div></div>
+        <div class="stat-item"><div class="stat-num">156</div><div class="stat-label">SAT Math 750+ / 800</div></div>
+        <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Foydalanuvchilar</div></div>
+        <div class="stat-item"><div class="stat-num">300+</div><div class="stat-label">Video Darslar</div></div>
+        <div class="stat-item"><div class="stat-num">100+</div><div class="stat-label">Amaliy Testlar</div></div>
+    </div>
+</div>
+
+<!-- COURSES -->
+<section id="courses">
+    <div class="container">
+        <div class="courses-header">
+            <div>
+                <div class="section-tag">O'quv dasturlari</div>
+                <h2 class="section-title">Sizga mos kursni tanlang</h2>
+            </div>
+            <p class="section-sub">Online va Offline formatlarda SAT imtihoniga professional tayyorgarlik.</p>
+        </div>
+        <div class="courses-grid">
+            <!-- ONLINE KURS -->
+            <div class="course-card">
+                <div class="course-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <h3>Online Kurs</h3>
+                <p class="course-tagline">Telegram Platformasida Jonli Darslar va Online Resurslar</p>
+                <ul class="course-features">
+                    <li>Jonli Darslar Malakali Ustozlar Bilan</li>
+                    <li>+300 Video Darslar</li>
+                    <li>+100 Amaliy Testlar</li>
+                    <li>Yuqori Natijaga Erishish Uchun Strategiyalar</li>
+                </ul>
+                <a href="{% url 'register' %}" class="card-btn-new">Ro'yxatdan O'tish</a>
+            </div>
+            <!-- OFFLINE KURS -->
+            <div class="course-card">
+                <div class="course-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <h3>Offline Kurs</h3>
+                <p class="course-tagline">Yangi O'zbekiston Universitetida Tashkillashtirilgan SAT Kurslari</p>
+                <div class="course-photo">
+                    <div class="course-photo-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        <span>Dars jarayoni</span>
+                    </div>
+                </div>
+                <div class="course-tags">
+                    <div class="course-tag-row"><span class="ctag">SAT English</span><span class="ctag-text">3 kun SAT English</span></div>
+                    <div class="course-tag-row"><span class="ctag">SAT Math</span><span class="ctag-text">3 kun SAT Math</span></div>
+                    <div class="course-tag-row"><span class="ctag">Haftalik Mock Test</span><span class="ctag-text">Haftalik Natijalar Tahlili</span></div>
+                </div>
+                <a href="https://t.me/satislomxonadmin" target="_blank" class="card-btn-new">Kursga Yozilish</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RESOURCES -->
+<section id="resources">
+    <div class="container">
+        <div class="resources-split">
+            <div>
+                <div class="section-tag">Resurslar</div>
+                <h2 class="section-title">SAT ga tayyorgarlik uchun barcha kerakli materiallar</h2>
+                <p class="section-sub" style="margin-top:14px">Har bir mavzu bo'yicha chuqur materiallar, testlar va jonli sessiyalar bilan to'liq tayyorgarlik olasiz.</p>
+                <a href="#contact" class="btn btn-primary" style="margin-top:26px;padding:12px 24px">Boshlash</a>
+            </div>
+            <div class="resources-grid-2">
+                <div class="resource-card">
+                    <div class="resource-num">300+</div>
+                    <h4>Video Darslar</h4>
+                    <p>Har bir mavzu bo'yicha chuqur video yozuvlar va tushuntirish</p>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-num">100+</div>
+                    <h4>Amaliy Testlar</h4>
+                    <p>Haqiqiy SAT testlariga o'xshash topshiriqlar va imtihonlar</p>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-num">PDF</div>
+                    <h4>Materiallar</h4>
+                    <p>Yuklab olinishi mumkin bo'lgan qo'llanmalar va cheat sheetlar</p>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-num">Q&A</div>
+                    <h4>Jonli Sessiyalar</h4>
+                    <p>Haftasiga 2–3 marta jonli suhbatlar va savol-javob sessiyalari</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="container">
+        <div class="faq-split">
+            <div>
+                <div class="section-tag">FAQ</div>
+                <h2 class="section-title">Tez-Tez Berilgan Savollar</h2>
+                <p class="section-sub" style="margin-top:14px">Savolingiz javob topilmadimi? Telegram orqali to'g'ridan-to'g'ri bog'laning.</p>
+                <a href="https://t.me/satislomxonadmin" target="_blank" class="btn btn-primary" style="margin-top:26px;padding:12px 24px">Telegram</a>
+            </div>
+            <div class="faq-list">
+                {% for faq in faqs %}
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-q">
+                        <span>{{ faq.q }}</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-a"><div class="faq-a-inner">{{ faq.a }}</div></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+    <div class="container">
+        <div class="about-grid">
+            <div>
+                <div class="section-tag">Biz haqimizda</div>
+                <h2 class="section-title">O'zbekistonda SAT tayyorligida yetakchi</h2>
+                <p class="section-sub" style="margin-top:14px">SAT Islomxon jamoasi 2021-yildan beri O'zbekistonda SAT imtihoniga tayyorgarlik ko'rsatmoqda. O'quvchilarimiz eng yaxshi universitetlarga kirmoqda.</p>
+                <p class="section-sub" style="margin-top:12px">Bizning metodikamiz real natijaga yo'naltirilgan — har bir o'quvchi zaif tomonlarini aniqlaydi va maqsadli mashq qiladi.</p>
+            </div>
+            <div class="about-card">
+                <div class="founder-avatar">IS</div>
+                <div class="founder-name">Islomxon Saidov</div>
+                <div class="founder-role">Asoschisi va Bosh O'qituvchi</div>
+                <p class="about-p">SAT imtihonida 1560 ball to'plagan va 5+ yillik tayyorgarlik tajribasiga ega. Minglab o'quvchilarni maqsadli universitetlariga kirishga yordam bergan mutaxassis.</p>
+                <div class="about-stats">
+                    <div class="about-stat"><strong>1560</strong><span>SAT ball</span></div>
+                    <div class="about-stat"><strong>5+</strong><span>Yil tajriba</span></div>
+                    <div class="about-stat"><strong>500+</strong><span>O'quvchilar</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+    <div class="container">
+        <div class="contact-split">
+            <div>
+                <div class="section-tag">Bog'lanish</div>
+                <h2 class="section-title">Qo'shiling, boshlang</h2>
+                <p class="section-sub" style="margin-top:14px">Savolingiz bormi yoki kursga yozilmoqchimisiz? Istalgan platforma orqali murojaat qiling.</p>
+                <div class="contact-channels">
+                    <a href="https://t.me/satislomxon" target="_blank" class="channel-item">
+                        <div class="channel-letter" style="background:transparent;padding:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z" fill="#0088cc"/></svg></div>
+                        <div><div class="channel-name">Telegram Kanal</div><div class="channel-handle">@satislomxon</div></div>
+                    </a>
+                    <a href="https://t.me/satislomxonadmin" target="_blank" class="channel-item">
+                        <div class="channel-letter" style="background:transparent;padding:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z" fill="#0088cc"/></svg></div>
+                        <div><div class="channel-name">Admin</div><div class="channel-handle">@satislomxonadmin</div></div>
+                    </a>
+                    <a href="https://www.instagram.com/sat_club.uz" target="_blank" class="channel-item">
+                        <div class="channel-letter" style="background:transparent;padding:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><linearGradient id="ig_grad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#f09433"/><stop offset="25%" style="stop-color:#e6683c"/><stop offset="50%" style="stop-color:#dc2743"/><stop offset="75%" style="stop-color:#cc2366"/><stop offset="100%" style="stop-color:#bc1888"/></linearGradient><rect width="24" height="24" rx="6" fill="url(#ig_grad)"/><path d="M12 7.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9zm0 7.5a3 3 0 110-6 3 3 0 010 6zm5.25-8.625a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" fill="white"/><rect x="3" y="3" width="18" height="18" rx="5" stroke="none" fill="none"/></svg></div>
+                        <div><div class="channel-name">Instagram</div><div class="channel-handle">@sat_club.uz</div></div>
+                    </a>
+                    <a href="https://www.youtube.com/@satislomxon" target="_blank" class="channel-item">
+                        <div class="channel-letter" style="background:transparent;padding:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z" fill="#FF0000"/></svg></div>
+                        <div><div class="channel-name">YouTube</div><div class="channel-handle">SAT Islomxon</div></div>
+                    </a>
+                </div>
+            </div>
+            <div class="contact-form-box">
+                <h3>Xabar yuborish</h3>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="messages-bar">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.name }}
+                    {{ form.email }}
+                    {{ form.message }}
+                    <button type="submit" class="btn btn-primary" style="width:100%;padding:13px;font-size:0.95rem">Yuborish</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <a href="#" class="logo">SAT <span>Islomxon</span></a>
+    <p>2024 SAT Islomxon. Barcha huquqlar himoyalangan.</p>
+    <p>Email: <a href="mailto:info@satislomxon.uz">info@satislomxon.uz</a></p>
+</footer>
+
+<script>
+    window.addEventListener('scroll', () => {
+        document.getElementById('navbar').style.background =
+            window.scrollY > 40 ? 'rgba(255,255,255,0.98)' : 'rgba(255,255,255,0.92)';
+    });
+
+    function calculateScore() {
+        const math = Math.min(800, Math.max(0, parseInt(document.getElementById('math-score').value) || 0));
+        const rw = Math.min(800, Math.max(0, parseInt(document.getElementById('reading-score').value) || 0));
+        const total = math + rw;
+        const el = document.getElementById('total-score');
+        el.textContent = total;
+        el.style.color = total >= 1400 ? '#16a34a' : total >= 1200 ? '#d97706' : '#2563eb';
+    }
+
+    function toggleFaq(item) {
+        const isOpen = item.classList.contains('open');
+        // close all
+        document.querySelectorAll('.faq-item.open').forEach(i => {
+            i.classList.remove('open');
+            i.querySelector('.faq-toggle').textContent = '+';
+        });
+        // open clicked
+        if (!isOpen) {
+            item.classList.add('open');
+            item.querySelector('.faq-toggle').textContent = '−';
+        }
+    }
+
+    function toggleDropdown() {
+        const dd = document.getElementById('userDropdown');
+        if (dd) dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+    }
+    document.addEventListener('click', function(e) {
+        const wrap = document.querySelector('.user-avatar-wrap');
+        const dd = document.getElementById('userDropdown');
+        if (wrap && !wrap.contains(e.target) && dd) dd.style.display = 'none';
+    });
+
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
+        });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.course-card, .resource-card, .stat-item').forEach(el => {
+        el.style.opacity = '0'; el.style.transform = 'translateY(18px)';
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        obs.observe(el);
+    });
+</script>
+</body>
+</html>

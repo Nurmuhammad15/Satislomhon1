@@ -1,0 +1,765 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — SAT Islomxon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #f4f6f9;
+            --white: #ffffff;
+            --accent: #2563eb;
+            --accent2: #1d4ed8;
+            --accent-light: #eff4ff;
+            --gold: #d97706;
+            --gold-bg: #fef3c7;
+            --green: #16a34a;
+            --green-bg: #f0fdf4;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --font: 'Plus Jakarta Sans', sans-serif;
+        }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; height: 56px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-weight: 800; font-size: 1.1rem; color: var(--text); text-decoration: none; }
+        .logo span { color: var(--accent); }
+        .nav-right { display: flex; align-items: center; gap: 8px; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; cursor: pointer; font-family: var(--font); font-weight: 600; transition: all 0.18s; text-decoration: none; border-radius: 8px; font-size: 0.85rem; }
+        .btn-ghost { background: transparent; color: var(--muted); padding: 7px 14px; border: 1px solid var(--border); }
+        .btn-ghost:hover { background: var(--bg); color: var(--text); }
+        .btn-danger { background: #fef2f2; color: #dc2626; padding: 7px 14px; border: 1px solid #fecaca; }
+        .btn-danger:hover { background: #fee2e2; }
+
+        /* Avatar dropdown */
+        .avatar-wrap { position: relative; }
+        .avatar-btn {
+            display: flex; align-items: center; gap: 8px; cursor: pointer;
+            background: none; border: 1px solid var(--border); border-radius: 100px;
+            padding: 5px 12px 5px 5px; font-family: var(--font); transition: all 0.18s;
+        }
+        .avatar-btn:hover { background: var(--bg); border-color: #cbd5e1; }
+        .av-circle {
+            width: 30px; height: 30px; background: var(--accent); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; font-weight: 800; color: #fff; flex-shrink: 0;
+        }
+        .av-name { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+        .av-chevron { font-size: 0.6rem; color: var(--muted); margin-left: 2px; }
+        .dropdown {
+            position: absolute; top: calc(100% + 6px); right: 0;
+            background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+            min-width: 210px; box-shadow: 0 8px 28px rgba(0,0,0,0.09);
+            opacity: 0; pointer-events: none; transform: translateY(-4px);
+            transition: all 0.18s; z-index: 300;
+        }
+        .dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+        .dd-head { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+        .dd-name { font-weight: 700; font-size: 0.875rem; }
+        .dd-email { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+        .dd-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 16px; font-size: 0.85rem; font-weight: 500;
+            color: var(--text); text-decoration: none; transition: background 0.15s;
+            cursor: pointer; background: none; border: none; width: 100%; font-family: var(--font);
+        }
+        .dd-item:hover { background: var(--bg); }
+        .dd-item.red { color: #dc2626; }
+        .dd-item.red:hover { background: #fef2f2; }
+        .dd-sep { height: 1px; background: var(--border); margin: 4px 0; }
+        .dd-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+        .dd-dot.green { background: var(--green); }
+
+        /* ── LAYOUT ── */
+        .layout { display: flex; padding-top: 56px; min-height: 100vh; }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px; flex-shrink: 0;
+            background: var(--white); border-right: 1px solid var(--border);
+            padding: 20px 12px;
+            position: fixed; top: 56px; left: 0; bottom: 0; overflow-y: auto;
+        }
+        .sidebar-section { margin-bottom: 6px; }
+        .sidebar-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); padding: 8px 10px 4px; }
+        .sidebar-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 12px; border-radius: 8px; font-size: 0.875rem; font-weight: 500;
+            color: var(--muted); text-decoration: none; transition: all 0.15s; cursor: pointer;
+            border: none; background: none; width: 100%; font-family: var(--font);
+        }
+        .sidebar-item:hover { background: var(--bg); color: var(--text); }
+        .sidebar-item.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+        .sidebar-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; opacity: 0.5; }
+        .sidebar-item.active .sidebar-dot { opacity: 1; }
+
+        /* Main content */
+        .main-content { margin-left: 220px; flex: 1; padding: 28px 32px 60px; min-width: 0; }
+
+        /* Tab panels */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* Cards */
+        .card {
+            background: var(--white); border: 1px solid var(--border);
+            border-radius: 14px; padding: 24px;
+        }
+        .card-title { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .card-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 20px; }
+
+        /* Grid helpers */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+
+        /* Stat cards */
+        .stat-mini { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+        .stat-mini-label { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+        .stat-mini-val { font-size: 1.7rem; font-weight: 800; color: var(--text); line-height: 1; }
+        .stat-mini-sub { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+        .stat-mini.blue .stat-mini-val { color: var(--accent); }
+        .stat-mini.green .stat-mini-val { color: var(--green); }
+
+        /* Empty state */
+        .empty-state { text-align: center; padding: 48px 24px; color: var(--muted); font-size: 0.875rem; }
+        .empty-title { font-weight: 600; font-size: 0.95rem; color: var(--text); margin-bottom: 6px; }
+
+        /* Chart placeholder */
+        .chart-area {
+            height: 140px; display: flex; align-items: center; justify-content: center;
+            color: var(--muted); font-size: 0.83rem; border-radius: 8px;
+            background: var(--bg);
+        }
+
+        /* Practice Tests */
+        .test-list { display: flex; flex-direction: column; gap: 10px; }
+        .test-item {
+            background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+            padding: 18px 22px; display: flex; align-items: center; gap: 16px;
+            transition: all 0.18s;
+        }
+        .test-item:hover { border-color: #bfdbfe; box-shadow: 0 2px 12px rgba(37,99,235,0.07); }
+        .test-name { font-weight: 700; font-size: 0.9rem; color: var(--text); margin-bottom: 3px; }
+        .test-meta { font-size: 0.75rem; color: var(--muted); }
+        .test-tags { display: flex; gap: 6px; margin-top: 6px; }
+        .tag {
+            display: inline-flex; align-items: center;
+            padding: 2px 8px; border-radius: 100px; font-size: 0.7rem; font-weight: 600;
+        }
+        .tag-blue { background: var(--accent-light); color: var(--accent); }
+        .tag-gold { background: var(--gold-bg); color: var(--gold); }
+        .tag-green { background: var(--green-bg); color: var(--green); }
+        .tag-gray { background: #f1f5f9; color: var(--muted); }
+        .test-start-btn {
+            margin-left: auto; flex-shrink: 0;
+            background: var(--text); color: #fff;
+            padding: 9px 20px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;
+            border: none; cursor: pointer; font-family: var(--font); transition: all 0.18s;
+        }
+        .test-start-btn:hover { background: var(--accent); }
+
+        /* Score Calc */
+        .calc-layout { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
+        .calc-section-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; }
+        .calc-section-title.blue { color: var(--accent); }
+        .calc-section-title.gold { color: var(--gold); }
+        .slider-row { margin-bottom: 18px; }
+        .slider-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; font-weight: 500; color: var(--text); margin-bottom: 10px; }
+        .slider-right { display: flex; align-items: center; gap: 6px; }
+        .num-input {
+            width: 52px; height: 32px;
+            border: 2px solid var(--border); border-radius: 7px;
+            background: var(--bg); color: var(--text);
+            font-family: var(--font); font-size: 0.9rem; font-weight: 800;
+            text-align: center; outline: none;
+            transition: border-color 0.18s;
+            -moz-appearance: textfield;
+        }
+        .num-input::-webkit-inner-spin-button,
+        .num-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+        .num-input:focus { border-color: var(--accent); }
+        .num-input.gold:focus { border-color: var(--gold); }
+        .num-input.active-blue { border-color: var(--accent); background: var(--accent-light); }
+        .num-input.active-gold { border-color: var(--gold); background: var(--gold-bg); }
+        .slider-max-label { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+        .progress-track { height: 6px; background: #e2e8f0; border-radius: 100px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 100px; transition: width 0.25s; }
+
+        .score-display {
+            background: #0f172a; border-radius: 16px; padding: 28px; color: #fff;
+            margin-bottom: 14px;
+        }
+        .score-display-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
+        .score-display-num { font-size: 4rem; font-weight: 800; line-height: 1; }
+        .score-display-range { font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 4px; margin-bottom: 16px; }
+        .score-display-bar { height: 5px; background: rgba(255,255,255,0.15); border-radius: 100px; overflow: hidden; margin-bottom: 10px; }
+        .score-display-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #8b5cf6); border-radius: 100px; transition: width 0.4s; }
+        .score-percentile { font-size: 0.78rem; color: rgba(255,255,255,0.6); }
+
+        .section-scores { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+        .section-score-row { margin-bottom: 18px; }
+        .section-score-row:last-child { margin-bottom: 0; }
+        .sec-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; }
+        .sec-val { font-size: 2rem; font-weight: 800; color: var(--text); line-height: 1; margin-bottom: 8px; }
+        .sec-bar-wrap { height: 5px; background: var(--border); border-radius: 100px; overflow: hidden; }
+        .sec-bar { height: 100%; border-radius: 100px; transition: width 0.4s; }
+        .sec-bar.blue { background: var(--accent); }
+        .sec-bar.gold { background: var(--gold); }
+
+        /* Study Plan */
+        .study-plan-hero { text-align: center; padding: 60px 40px; }
+        .study-plan-hero h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+        .study-plan-hero p { color: var(--muted); font-size: 0.875rem; max-width: 380px; margin: 0 auto 24px; line-height: 1.7; }
+        .btn-create { background: var(--gold); color: #fff; padding: 11px 24px; border-radius: 9px; font-size: 0.875rem; font-weight: 700; border: none; cursor: pointer; font-family: var(--font); transition: all 0.18s; }
+        .btn-create:hover { background: #b45309; transform: translateY(-1px); }
+
+        /* Modal overlay */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 500;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: all; }
+        .modal {
+            background: var(--white); border-radius: 18px; width: 520px; max-width: 95vw;
+            max-height: 92vh; overflow-y: auto;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+            transform: translateY(12px); transition: transform 0.2s;
+            padding: 28px;
+        }
+        .modal-overlay.open .modal { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+        .modal-title { font-size: 1.1rem; font-weight: 800; }
+        .modal-close { background: none; border: none; font-size: 1.2rem; color: var(--muted); cursor: pointer; padding: 2px 6px; border-radius: 6px; transition: background 0.15s; }
+        .modal-close:hover { background: var(--bg); }
+        .modal-sub { color: var(--muted); font-size: 0.83rem; margin-bottom: 22px; line-height: 1.6; }
+
+        .modal-test-info { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-bottom: 22px; }
+        .modal-test-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; }
+        .modal-test-meta { display: flex; gap: 16px; font-size: 0.75rem; color: var(--muted); }
+
+        .modal-section-title { font-size: 0.83rem; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+
+        /* Time accommodation */
+        .time-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 22px; }
+        .time-opt {
+            border: 1px solid var(--border); border-radius: 10px; padding: 14px 12px;
+            text-align: center; cursor: pointer; transition: all 0.15s; background: var(--white);
+        }
+        .time-opt:hover { border-color: #bfdbfe; }
+        .time-opt.selected { border-color: var(--text); border-width: 2px; background: var(--bg); }
+        .time-opt-name { font-weight: 700; font-size: 0.85rem; margin-bottom: 3px; }
+        .time-opt-desc { font-size: 0.72rem; color: var(--muted); }
+
+        /* Practice options */
+        .practice-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 22px; }
+        .practice-opt {
+            border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px;
+            cursor: pointer; transition: all 0.15s; background: var(--white); text-align: left;
+            display: flex; align-items: flex-start; gap: 10px;
+        }
+        .practice-opt:hover { border-color: #bfdbfe; }
+        .practice-opt.selected { border-color: var(--text); border-width: 2px; }
+        .radio-circle {
+            width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border);
+            margin-top: 2px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s;
+        }
+        .practice-opt.selected .radio-circle { border-color: var(--text); background: var(--text); }
+        .radio-inner { width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+        .practice-opt-name { font-weight: 700; font-size: 0.85rem; margin-bottom: 2px; }
+        .practice-opt-desc { font-size: 0.72rem; color: var(--muted); }
+        .practice-opt-time { display: inline-block; background: var(--gold-bg); color: var(--gold); font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 100px; margin-top: 6px; }
+
+        /* Modal footer */
+        .modal-footer { border-top: 1px solid var(--border); padding-top: 18px; display: flex; align-items: center; justify-content: space-between; }
+        .modal-duration { }
+        .modal-duration-label { font-size: 0.72rem; color: var(--muted); font-weight: 500; }
+        .modal-duration-val { font-size: 1.3rem; font-weight: 800; }
+        .modal-duration-timing { font-size: 0.75rem; color: var(--muted); }
+        .modal-actions { display: flex; gap: 10px; }
+        .btn-cancel { background: var(--bg); color: var(--text); padding: 10px 20px; border-radius: 9px; font-size: 0.875rem; font-weight: 600; border: 1px solid var(--border); cursor: pointer; font-family: var(--font); }
+        .btn-start { background: var(--text); color: #fff; padding: 10px 22px; border-radius: 9px; font-size: 0.875rem; font-weight: 700; border: none; cursor: pointer; font-family: var(--font); transition: background 0.18s; }
+        .btn-start:hover { background: var(--accent); }
+
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 18px; }
+            .calc-layout { grid-template-columns: 1fr; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .time-options { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <a href="/" class="logo">SAT <span>Islomxon</span></a>
+    <div class="nav-right">
+        <div class="avatar-wrap">
+            <button class="avatar-btn" onclick="toggleDd()" id="avBtn">
+                <div class="av-circle">{{ user.get_full_name|default:user.username|slice:":2"|upper }}</div>
+                <span class="av-name">{{ user.get_full_name|default:user.username }}</span>
+                <span class="av-chevron">&#9660;</span>
+            </button>
+            <div class="dropdown" id="dd">
+                <div class="dd-head">
+                    <div class="dd-name">{{ user.get_full_name|default:user.username }}</div>
+                    <div class="dd-email">{{ user.email }}</div>
+                </div>
+                <a href="{% url 'dashboard' %}" class="dd-item"><span class="dd-dot green"></span>Shaxsiy kabinet</a>
+                <a href="#" class="dd-item"><span class="dd-dot"></span>Profil sozlamalari</a>
+                <div class="dd-sep"></div>
+                <form method="POST" action="{% url 'logout' %}" style="margin:0">
+                    {% csrf_token %}
+                    <button type="submit" class="dd-item red"><span class="dd-dot" style="background:#fca5a5"></span>Chiqish</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Asosiy</div>
+            <button class="sidebar-item active" onclick="setTab('practice')">
+                <span class="sidebar-dot"></span>Amaliy Testlar
+            </button>
+            <button class="sidebar-item" onclick="setTab('history')">
+                <span class="sidebar-dot"></span>Test Tarixi
+            </button>
+            <button class="sidebar-item" onclick="setTab('studyplan')">
+                <span class="sidebar-dot"></span>O'quv Rejasi
+            </button>
+            <button class="sidebar-item" onclick="setTab('calc')">
+                <span class="sidebar-dot"></span>Score Calculator
+            </button>
+        </div>
+        <div class="sidebar-section" style="margin-top:16px">
+            <div class="sidebar-label">Statistika</div>
+            <div style="padding:10px 12px;font-size:0.78rem;color:var(--muted)">
+                <div style="margin-bottom:6px">Testlar: <strong style="color:var(--text)">0</strong></div>
+                <div style="margin-bottom:6px">Darslar: <strong style="color:var(--text)">0</strong></div>
+                <div>Maqsad: <strong style="color:var(--accent)">1400</strong></div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <!-- ── PANEL: PRACTICE TESTS ── -->
+        <div class="tab-panel active" id="panel-practice">
+            <div class="grid-4">
+                <div class="stat-mini blue">
+                    <div class="stat-mini-label">Eng yuqori ball</div>
+                    <div class="stat-mini-val">—</div>
+                    <div class="stat-mini-sub">Hali test yo'q</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="stat-mini-label">O'rtacha ball</div>
+                    <div class="stat-mini-val">—</div>
+                    <div class="stat-mini-sub">Hali test yo'q</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="stat-mini-label">Tugatilgan</div>
+                    <div class="stat-mini-val">0</div>
+                    <div class="stat-mini-sub">test</div>
+                </div>
+                <div class="stat-mini green">
+                    <div class="stat-mini-label">O'rtacha aniqlik</div>
+                    <div class="stat-mini-val">—</div>
+                    <div class="stat-mini-sub">Hali test yo'q</div>
+                </div>
+            </div>
+
+            <div class="test-list">
+                <div class="test-item">
+                    <div style="flex:1">
+                        <div class="test-name">Oct 2024 V.1</div>
+                        <div class="test-meta">4 ta modul &nbsp;·&nbsp; 98 ta savol</div>
+                        <div class="test-tags">
+                            <span class="tag tag-blue">To'liq test</span>
+                            <span class="tag tag-gold">2h 14min</span>
+                        </div>
+                    </div>
+                    <button class="test-start-btn" onclick="openModal('Oct 2024 V.1', 4, 98)">Boshlash</button>
+                </div>
+                <div class="test-item">
+                    <div style="flex:1">
+                        <div class="test-name">Dec 2024 V.2</div>
+                        <div class="test-meta">4 ta modul &nbsp;·&nbsp; 98 ta savol</div>
+                        <div class="test-tags">
+                            <span class="tag tag-blue">To'liq test</span>
+                            <span class="tag tag-gold">2h 14min</span>
+                        </div>
+                    </div>
+                    <button class="test-start-btn" onclick="openModal('Dec 2024 V.2', 4, 98)">Boshlash</button>
+                </div>
+                <div class="test-item">
+                    <div style="flex:1">
+                        <div class="test-name">Mar 2025 V.1</div>
+                        <div class="test-meta">4 ta modul &nbsp;·&nbsp; 98 ta savol</div>
+                        <div class="test-tags">
+                            <span class="tag tag-blue">To'liq test</span>
+                            <span class="tag tag-gold">2h 14min</span>
+                        </div>
+                    </div>
+                    <button class="test-start-btn" onclick="openModal('Mar 2025 V.1', 4, 98)">Boshlash</button>
+                </div>
+                <div class="test-item">
+                    <div style="flex:1">
+                        <div class="test-name">Math Modul — Algebra</div>
+                        <div class="test-meta">1 ta modul &nbsp;·&nbsp; 22 ta savol</div>
+                        <div class="test-tags">
+                            <span class="tag tag-green">Math</span>
+                            <span class="tag tag-gold">32 min</span>
+                        </div>
+                    </div>
+                    <button class="test-start-btn" onclick="openModal('Math — Algebra', 1, 22)">Boshlash</button>
+                </div>
+                <div class="test-item">
+                    <div style="flex:1">
+                        <div class="test-name">Reading & Writing Modul</div>
+                        <div class="test-meta">1 ta modul &nbsp;·&nbsp; 27 ta savol</div>
+                        <div class="test-tags">
+                            <span class="tag tag-blue">Reading</span>
+                            <span class="tag tag-gold">32 min</span>
+                        </div>
+                    </div>
+                    <button class="test-start-btn" onclick="openModal('Reading & Writing', 1, 27)">Boshlash</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── PANEL: TEST HISTORY ── -->
+        <div class="tab-panel" id="panel-history">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">Ball Dinamikasi</div>
+                    <div class="card-sub">Vaqt o'tishi bilan to'liq test ballari</div>
+                    <div class="chart-area">Birinchi testni bajaring — natijalar shu yerda ko'rinadi</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Amaliy Aniqlik</div>
+                    <div class="card-sub">Har bir modul bo'yicha aniqlik (%)</div>
+                    <div class="chart-area" style="flex-direction:column;gap:8px">
+                        <div style="width:100%;display:flex;align-items:flex-end;gap:40px;padding:0 24px;height:80px">
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+                                <div style="width:32px;background:#e2e8f0;border-radius:4px 4px 0 0;height:4px"></div>
+                                <span style="font-size:0.7rem;color:var(--muted)">Amaliy 1</span>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+                                <div style="width:32px;background:#e2e8f0;border-radius:4px 4px 0 0;height:4px"></div>
+                                <span style="font-size:0.7rem;color:var(--muted)">Amaliy 2</span>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+                                <div style="width:32px;background:#e2e8f0;border-radius:4px 4px 0 0;height:4px"></div>
+                                <span style="font-size:0.7rem;color:var(--muted)">Amaliy 3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Vaqt Boshqaruvi</div>
+                <div class="card-sub">Har bir test uchun sarflangan o'rtacha vaqt (daqiqa)</div>
+                <div class="chart-area">Birinchi testni bajaring — vaqt statistikasi shu yerda ko'rinadi</div>
+            </div>
+        </div>
+
+        <!-- ── PANEL: STUDY PLAN ── -->
+        <div class="tab-panel" id="panel-studyplan">
+            <div class="card">
+                <div class="study-plan-hero">
+                    <div style="width:52px;height:52px;background:var(--bg);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.3rem;color:var(--muted)">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <h3>Shaxsiy O'quv Rejasi</h3>
+                    <p>Maqsad ballingiz va mavjud vaqtingiz asosida maxsus o'quv rejasi tuzing. Har bir o'quvchi uchun alohida jadval.</p>
+                    <button class="btn-create" onclick="alert('Tez orada: AI asosida o\'quv rejasi tuzish imkoniyati!')">O'quv Rejasi Tuzish</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── PANEL: SCORE CALC ── -->
+        <div class="tab-panel" id="panel-calc">
+            <div style="margin-bottom:16px">
+                <div style="font-size:1.05rem;font-weight:800;margin-bottom:4px">SAT Score Calculator</div>
+                <div style="font-size:0.83rem;color:var(--muted)">Har bir modul uchun to'g'ri javoblar sonini kiriting va darhol taxminiy SAT ballingizni biling.</div>
+            </div>
+            <div class="calc-layout">
+                <div class="card">
+                    <div class="calc-section-title blue">READING & WRITING</div>
+                    <div class="slider-row">
+                        <div class="slider-label">
+                            <span>Modul 1</span>
+                            <div class="slider-right">
+                                <input type="number" class="num-input" id="rw1" min="0" max="27" value="27" oninput="clamp(this,27);calcScore()">
+                                <span class="slider-max-label">/ 27</span>
+                            </div>
+                        </div>
+                        <div class="progress-track"><div class="progress-fill" id="rw1-bar" style="width:100%;background:var(--accent)"></div></div>
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label">
+                            <span>Modul 2</span>
+                            <div class="slider-right">
+                                <input type="number" class="num-input" id="rw2" min="0" max="27" value="27" oninput="clamp(this,27);calcScore()">
+                                <span class="slider-max-label">/ 27</span>
+                            </div>
+                        </div>
+                        <div class="progress-track"><div class="progress-fill" id="rw2-bar" style="width:100%;background:var(--accent)"></div></div>
+                    </div>
+
+                    <div class="calc-section-title gold" style="margin-top:28px">MATH</div>
+                    <div class="slider-row">
+                        <div class="slider-label">
+                            <span>Modul 1</span>
+                            <div class="slider-right">
+                                <input type="number" class="num-input gold" id="m1" min="0" max="22" value="22" oninput="clamp(this,22);calcScore()">
+                                <span class="slider-max-label">/ 22</span>
+                            </div>
+                        </div>
+                        <div class="progress-track"><div class="progress-fill" id="m1-bar" style="width:100%;background:var(--gold)"></div></div>
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label">
+                            <span>Modul 2</span>
+                            <div class="slider-right">
+                                <input type="number" class="num-input gold" id="m2" min="0" max="22" value="22" oninput="clamp(this,22);calcScore()">
+                                <span class="slider-max-label">/ 22</span>
+                            </div>
+                        </div>
+                        <div class="progress-track"><div class="progress-fill" id="m2-bar" style="width:100%;background:var(--gold)"></div></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="score-display">
+                        <div class="score-display-label">TOTAL SCORE</div>
+                        <div class="score-display-num" id="total-display">1600</div>
+                        <div class="score-display-range">400 – 1600</div>
+                        <div class="score-display-bar">
+                            <div class="score-display-fill" id="total-bar" style="width:100%"></div>
+                        </div>
+                        <div class="score-percentile" id="percentile-display">Percentile: ~99%</div>
+                    </div>
+                    <div class="section-scores">
+                        <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:16px">SECTION SCORES</div>
+                        <div class="section-score-row">
+                            <div class="sec-label">Reading & Writing</div>
+                            <div class="sec-val" id="rw-score">800</div>
+                            <div class="sec-bar-wrap"><div class="sec-bar blue" id="rw-bar" style="width:100%"></div></div>
+                            <div style="font-size:0.72rem;color:var(--muted);margin-top:4px">200 – 800</div>
+                        </div>
+                        <div class="section-score-row">
+                            <div class="sec-label">Math</div>
+                            <div class="sec-val" id="m-score">800</div>
+                            <div class="sec-bar-wrap"><div class="sec-bar gold" id="m-bar" style="width:100%"></div></div>
+                            <div style="font-size:0.72rem;color:var(--muted);margin-top:4px">200 – 800</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /main-content -->
+</div><!-- /layout -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">Amaliy Testni Boshlash</div>
+            <button class="modal-close" onclick="closeModal()">&#215;</button>
+        </div>
+        <div class="modal-sub">Test sozlamalarini tanlang. Vaqt va qaysi bo'limlarni mashq qilishni belgilang.</div>
+
+        <div class="modal-test-info">
+            <div class="modal-test-name" id="modal-test-name">Dec 2024 V.2</div>
+            <div class="modal-test-meta">
+                <span id="modal-modules">4 ta modul</span>
+                <span id="modal-questions">98 ta savol</span>
+            </div>
+        </div>
+
+        <div class="modal-section-title">Vaqt Rejimi</div>
+        <div class="time-options">
+            <div class="time-opt selected" onclick="selectTime(this, 1, '2h 14min')">
+                <div class="time-opt-name">Standart</div>
+                <div class="time-opt-desc">Rasmiy SAT vaqti</div>
+            </div>
+            <div class="time-opt" onclick="selectTime(this, 1.5, '3h 21min')">
+                <div class="time-opt-name">1.5x Vaqt</div>
+                <div class="time-opt-desc">50% qo'shimcha vaqt</div>
+            </div>
+            <div class="time-opt" onclick="selectTime(this, 2, '4h 28min')">
+                <div class="time-opt-name">2x Vaqt</div>
+                <div class="time-opt-desc">100% qo'shimcha vaqt</div>
+            </div>
+        </div>
+
+        <div class="modal-section-title">Nima Mashq Qilish</div>
+        <div class="practice-options">
+            <div class="practice-opt selected" onclick="selectPractice(this, '2h 14min')">
+                <div class="radio-circle"><div class="radio-inner"></div></div>
+                <div>
+                    <div class="practice-opt-name">To'liq Test</div>
+                    <div class="practice-opt-desc">Barcha modullar (RW + Math)</div>
+                    <span class="practice-opt-time">2h 14min</span>
+                </div>
+            </div>
+            <div class="practice-opt" onclick="selectPractice(this, '64 min')">
+                <div class="radio-circle"><div class="radio-inner"></div></div>
+                <div>
+                    <div class="practice-opt-name">Reading & Writing</div>
+                    <div class="practice-opt-desc">Faqat RW modullari</div>
+                    <span class="practice-opt-time">64 min</span>
+                </div>
+            </div>
+            <div class="practice-opt" onclick="selectPractice(this, '70 min')">
+                <div class="radio-circle"><div class="radio-inner"></div></div>
+                <div>
+                    <div class="practice-opt-name">Faqat Math</div>
+                    <div class="practice-opt-desc">Ikki Math moduli</div>
+                    <span class="practice-opt-time">70 min</span>
+                </div>
+            </div>
+            <div class="practice-opt" onclick="selectPractice(this, '~32 min')">
+                <div class="radio-circle"><div class="radio-inner"></div></div>
+                <div>
+                    <div class="practice-opt-name">Bitta Modul</div>
+                    <div class="practice-opt-desc">Bitta modul mashqi</div>
+                    <span class="practice-opt-time">~32 min</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <div class="modal-duration">
+                <div class="modal-duration-label">Taxminiy Davomiylik</div>
+                <div class="modal-duration-val" id="modal-duration">2h 14min</div>
+                <div class="modal-duration-timing" id="modal-timing">Vaqt: 1x</div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">Bekor qilish</button>
+                <button class="btn-start">Testni Boshlash</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Nav dropdown
+    function toggleDd() { document.getElementById('dd').classList.toggle('open'); }
+    document.addEventListener('click', e => {
+        const b = document.getElementById('avBtn'), d = document.getElementById('dd');
+        if (!b.contains(e.target) && !d.contains(e.target)) d.classList.remove('open');
+    });
+
+    // Tabs — sync sidebar only
+    function setTab(name) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+        document.getElementById('panel-' + name).classList.add('active');
+        const sidebarMap = { practice: 0, history: 1, studyplan: 2, calc: 3 };
+        const items = document.querySelectorAll('.sidebar-item');
+        if (items[sidebarMap[name]]) items[sidebarMap[name]].classList.add('active');
+    }
+
+    // Clamp number input
+    function clamp(el, max) {
+        let v = parseInt(el.value);
+        if (isNaN(v) || v < 0) el.value = 0;
+        else if (v > max) el.value = max;
+    }
+
+    // Score calc
+    function calcScore() {
+        const rw1 = Math.min(27, Math.max(0, +document.getElementById('rw1').value || 0));
+        const rw2 = Math.min(27, Math.max(0, +document.getElementById('rw2').value || 0));
+        const m1  = Math.min(22, Math.max(0, +document.getElementById('m1').value  || 0));
+        const m2  = Math.min(22, Math.max(0, +document.getElementById('m2').value  || 0));
+
+        // Update progress bars under each input
+        document.getElementById('rw1-bar').style.width = (rw1/27*100) + '%';
+        document.getElementById('rw2-bar').style.width = (rw2/27*100) + '%';
+        document.getElementById('m1-bar').style.width  = (m1/22*100) + '%';
+        document.getElementById('m2-bar').style.width  = (m2/22*100) + '%';
+
+        // Highlight active input border
+        ['rw1','rw2'].forEach(id => {
+            const el = document.getElementById(id);
+            el.classList.toggle('active-blue', +el.value > 0);
+        });
+        ['m1','m2'].forEach(id => {
+            const el = document.getElementById(id);
+            el.classList.toggle('active-gold', +el.value > 0);
+        });
+
+        const rwPct = (rw1 + rw2) / 54;
+        const mPct  = (m1 + m2) / 44;
+        const rwScore = Math.round(200 + rwPct * 600);
+        const mScore  = Math.round(200 + mPct * 600);
+        const total   = rwScore + mScore;
+        const totalPct = (total - 400) / 1200 * 100;
+
+        document.getElementById('rw-score').textContent = rwScore;
+        document.getElementById('m-score').textContent  = mScore;
+        document.getElementById('total-display').textContent = total;
+        document.getElementById('total-bar').style.width = totalPct + '%';
+        document.getElementById('rw-bar').style.width = (rwPct * 100) + '%';
+        document.getElementById('m-bar').style.width  = (mPct  * 100) + '%';
+
+        let pct = total >= 1550 ? '~99%' : total >= 1450 ? '~96%' : total >= 1350 ? '~90%' :
+                  total >= 1250 ? '~80%' : total >= 1150 ? '~65%' : total >= 1050 ? '~50%' : '~35%';
+        document.getElementById('percentile-display').textContent = 'Percentile: ' + pct;
+    }
+
+    // Modal
+    let selectedDuration = '2h 14min', timeMult = 1;
+    function openModal(name, modules, questions) {
+        document.getElementById('modal-test-name').textContent = name;
+        document.getElementById('modal-modules').textContent = modules + ' ta modul';
+        document.getElementById('modal-questions').textContent = questions + ' ta savol';
+        document.querySelectorAll('.time-opt').forEach((o,i) => o.classList.toggle('selected', i===0));
+        document.querySelectorAll('.practice-opt').forEach((o,i) => o.classList.toggle('selected', i===0));
+        timeMult = 1; selectedDuration = '2h 14min'; updateFooter();
+        document.getElementById('modalOverlay').classList.add('open');
+    }
+    function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+    function closeModalOnBg(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+    function selectTime(el, mult, dur) {
+        document.querySelectorAll('.time-opt').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected'); timeMult = mult; updateFooter();
+    }
+    function selectPractice(el, dur) {
+        document.querySelectorAll('.practice-opt').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected'); selectedDuration = dur; updateFooter();
+    }
+    function updateFooter() {
+        document.getElementById('modal-duration').textContent = selectedDuration;
+        document.getElementById('modal-timing').textContent = 'Vaqt: ' + timeMult + 'x';
+    }
+</script>
+</body>
+</html>

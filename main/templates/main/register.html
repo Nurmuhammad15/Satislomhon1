@@ -1,0 +1,368 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ro'yxatdan O'tish — SAT Islomxon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #ffffff;
+            --surface: #f8f9fb;
+            --accent: #2563eb;
+            --accent2: #1d4ed8;
+            --accent-light: #eff4ff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --error: #dc2626;
+            --font: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        html { height: 100%; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* LEFT PANEL */
+        .left-panel {
+            background: var(--accent);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 48px 52px;
+            position: relative;
+            overflow: hidden;
+        }
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: -120px; right: -120px;
+            width: 400px; height: 400px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .left-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; left: -80px;
+            width: 300px; height: 300px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .panel-logo { font-size: 1.2rem; font-weight: 800; color: #fff; text-decoration: none; position: relative; z-index: 1; }
+        .panel-logo span { opacity: 0.75; }
+
+        .panel-content { position: relative; z-index: 1; }
+        .panel-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.65); margin-bottom: 16px; }
+        .panel-title { font-size: 2.2rem; font-weight: 800; line-height: 1.2; color: #fff; margin-bottom: 16px; }
+        .panel-desc { color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.75; max-width: 340px; margin-bottom: 36px; }
+
+        .panel-perks { display: flex; flex-direction: column; gap: 14px; }
+        .perk-row { display: flex; align-items: center; gap: 14px; }
+        .perk-dot { width: 8px; height: 8px; background: rgba(255,255,255,0.6); border-radius: 50%; flex-shrink: 0; }
+        .perk-text { color: rgba(255,255,255,0.85); font-size: 0.9rem; font-weight: 500; }
+
+        .panel-footer { color: rgba(255,255,255,0.5); font-size: 0.8rem; position: relative; z-index: 1; }
+
+        /* RIGHT PANEL */
+        .right-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 52px;
+            background: var(--bg);
+            overflow-y: auto;
+        }
+
+        .register-box {
+            width: 100%;
+            max-width: 420px;
+            animation: fadeUp 0.5s ease both;
+        }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+
+        .register-heading { font-size: 1.8rem; font-weight: 800; margin-bottom: 6px; color: var(--text); }
+        .register-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 32px; }
+        .register-sub a { color: var(--accent); text-decoration: none; font-weight: 600; }
+        .register-sub a:hover { text-decoration: underline; }
+
+        /* Error/Success */
+        .form-error-box {
+            background: #fef2f2; border: 1px solid #fecaca;
+            border-radius: 10px; padding: 12px 16px;
+            margin-bottom: 18px; font-size: 0.875rem; color: #dc2626; font-weight: 500;
+        }
+        .success-box {
+            background: #f0fdf4; border: 1px solid #bbf7d0;
+            border-radius: 10px; padding: 12px 16px;
+            margin-bottom: 18px; font-size: 0.875rem; color: #16a34a; font-weight: 500;
+        }
+
+        /* Two columns for name fields */
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 7px; }
+
+        .form-field {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 13px 15px;
+            border-radius: 10px;
+            font-family: var(--font);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .form-field::placeholder { color: #cbd5e1; }
+        .form-field.has-error { border-color: var(--error); }
+        .field-error { font-size: 0.78rem; color: var(--error); margin-top: 5px; font-weight: 500; }
+
+        /* Password */
+        .password-wrap { position: relative; }
+        .password-wrap .form-field { padding-right: 70px; }
+        .toggle-pass {
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: var(--muted); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            padding: 4px; transition: color 0.2s; border-radius: 4px;
+        }
+        .toggle-pass:hover { color: var(--accent); background: var(--accent-light); }
+
+        /* Terms */
+        .terms-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 22px; margin-top: 4px; }
+        .terms-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; margin-top: 2px; flex-shrink: 0; }
+        .terms-text { font-size: 0.83rem; color: var(--muted); line-height: 1.5; }
+        .terms-text a { color: var(--accent); text-decoration: none; font-weight: 600; }
+        .terms-text a:hover { text-decoration: underline; }
+
+        /* Submit */
+        .btn-submit {
+            width: 100%; background: var(--accent); color: #fff;
+            padding: 14px; border-radius: 10px;
+            font-size: 0.95rem; font-weight: 700;
+            font-family: var(--font); border: none; cursor: pointer;
+            transition: all 0.2s; margin-bottom: 18px;
+        }
+        .btn-submit:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.25); }
+
+        /* Divider */
+        .divider { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .divider-line { flex: 1; height: 1px; background: var(--border); }
+        .divider-text { color: var(--muted); font-size: 0.78rem; font-weight: 500; }
+
+        /* Telegram */
+        .btn-tg-login {
+            width: 100%; background: transparent; border: 1px solid var(--border);
+            color: var(--text); padding: 13px; border-radius: 10px;
+            font-size: 0.875rem; font-weight: 600; font-family: var(--font);
+            cursor: pointer; transition: all 0.2s; text-decoration: none;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-tg-login:hover { background: var(--surface); border-color: #bfdbfe; color: var(--accent); }
+        .tg-label {
+            width: 20px; height: 20px; background: #0088cc;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 0.65rem; font-weight: 800; color: #fff; flex-shrink: 0;
+        }
+
+        .bottom-link { text-align: center; margin-top: 22px; font-size: 0.85rem; color: var(--muted); }
+        .bottom-link a { color: var(--accent); text-decoration: none; font-weight: 600; }
+        .bottom-link a:hover { text-decoration: underline; }
+
+        /* Password strength */
+        .strength-bar { height: 4px; background: var(--border); border-radius: 100px; margin-top: 8px; overflow: hidden; }
+        .strength-fill { height: 100%; border-radius: 100px; transition: all 0.3s; width: 0; }
+        .strength-text { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+        @media (max-width: 800px) {
+            body { grid-template-columns: 1fr; }
+            .left-panel { display: none; }
+            .right-panel { padding: 36px 20px; align-items: flex-start; padding-top: 60px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+    <a href="/" class="panel-logo">SAT <span>Islomxon</span></a>
+
+    <div class="panel-content">
+        <div class="panel-tag">O'quv platformasi</div>
+        <div class="panel-title">SAT da muvaffaqiyat sari birinchi qadam</div>
+        <p class="panel-desc">Hoziroq ro'yxatdan o'ting va 300+ video dars, 100+ amaliy test hamda jonli sessiyalarga kiring.</p>
+
+        <div class="panel-perks">
+            <div class="perk-row"><span class="perk-dot"></span><span class="perk-text">300+ video dars — istalgan vaqtda</span></div>
+            <div class="perk-row"><span class="perk-dot"></span><span class="perk-text">100+ amaliy test va imtihonlar</span></div>
+            <div class="perk-row"><span class="perk-dot"></span><span class="perk-text">Jonli Q&A sessiyalar, haftada 2-3 marta</span></div>
+            <div class="perk-row"><span class="perk-dot"></span><span class="perk-text">Shaxsiy o'quv rejasi va tahlil</span></div>
+            <div class="perk-row"><span class="perk-dot"></span><span class="perk-text">53 ta o'quvchi 1400+ ball olgan</span></div>
+        </div>
+    </div>
+
+    <div class="panel-footer">2024 SAT Islomxon. Barcha huquqlar himoyalangan.</div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+    <div class="register-box">
+        <div class="register-heading">Hisob yaratish</div>
+        <div class="register-sub">Allaqachon hisobingiz bormi? <a href="{% url 'login' %}">Kiring</a></div>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="form-error-box">{{ message }}</div>
+                {% else %}
+                    <div class="success-box">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if form.non_field_errors %}
+            <div class="form-error-box">
+                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Ism</label>
+                    <input type="text" name="first_name" class="form-field" placeholder="Islomxon"
+                           value="{{ form.first_name.value|default:'' }}">
+                    {% if form.first_name.errors %}<div class="field-error">{{ form.first_name.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Familiya</label>
+                    <input type="text" name="last_name" class="form-field" placeholder="Saidov"
+                           value="{{ form.last_name.value|default:'' }}">
+                    {% if form.last_name.errors %}<div class="field-error">{{ form.last_name.errors.0 }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Foydalanuvchi nomi</label>
+                <input type="text" name="username" class="form-field {% if form.username.errors %}has-error{% endif %}"
+                       placeholder="islomxon_sat" autocomplete="username"
+                       value="{{ form.username.value|default:'' }}">
+                {% if form.username.errors %}<div class="field-error">{{ form.username.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-field {% if form.email.errors %}has-error{% endif %}"
+                       placeholder="email@gmail.com" autocomplete="email"
+                       value="{{ form.email.value|default:'' }}">
+                {% if form.email.errors %}<div class="field-error">{{ form.email.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Parol</label>
+                <div class="password-wrap">
+                    <input type="password" id="password1" name="password1"
+                           class="form-field {% if form.password1.errors %}has-error{% endif %}"
+                           placeholder="Kamida 8 ta belgi" autocomplete="new-password"
+                           oninput="checkStrength(this.value)">
+                    <button type="button" class="toggle-pass" onclick="togglePass('password1', this)" aria-label="Ko'rish"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                </div>
+                <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+                <div class="strength-text" id="strength-text"></div>
+                {% if form.password1.errors %}<div class="field-error">{{ form.password1.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Parolni tasdiqlang</label>
+                <div class="password-wrap">
+                    <input type="password" id="password2" name="password2"
+                           class="form-field {% if form.password2.errors %}has-error{% endif %}"
+                           placeholder="Parolni qayta kiriting" autocomplete="new-password">
+                    <button type="button" class="toggle-pass" onclick="togglePass('password2', this)" aria-label="Ko'rish"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                </div>
+                {% if form.password2.errors %}<div class="field-error">{{ form.password2.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="terms-row">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label class="terms-text" for="terms">
+                    <a href="#">Foydalanish shartlari</a> va <a href="#">Maxfiylik siyosati</a> bilan roziman
+                </label>
+            </div>
+
+            <button type="submit" class="btn-submit">Hisob yaratish</button>
+        </form>
+
+        <div class="divider">
+            <div class="divider-line"></div>
+            <span class="divider-text">yoki</span>
+            <div class="divider-line"></div>
+        </div>
+
+        <a href="https://t.me/satislomxonadmin" target="_blank" class="btn-tg-login">
+            Telegram orqali ro'yxatdan o'tish
+        </a>
+
+        <div class="bottom-link">
+            Asosiy sahifaga qaytish? <a href="/">Bosh sahifa</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePass(id, btn) {
+        const inp = document.getElementById(id);
+        const isHidden = inp.type === 'password';
+        inp.type = isHidden ? 'text' : 'password';
+        btn.innerHTML = isHidden ? '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    }
+
+    function checkStrength(val) {
+        const fill = document.getElementById('strength-fill');
+        const text = document.getElementById('strength-text');
+        if (!val) { fill.style.width = '0'; text.textContent = ''; return; }
+        let score = 0;
+        if (val.length >= 8) score++;
+        if (/[A-Z]/.test(val)) score++;
+        if (/[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val)) score++;
+        const levels = [
+            { w: '25%', color: '#ef4444', label: 'Juda zaif' },
+            { w: '50%', color: '#f97316', label: 'Zaif' },
+            { w: '75%', color: '#eab308', label: "O'rtacha" },
+            { w: '100%', color: '#22c55e', label: 'Kuchli' },
+        ];
+        const lvl = levels[score - 1] || levels[0];
+        fill.style.width = lvl.w;
+        fill.style.background = lvl.color;
+        text.textContent = lvl.label;
+        text.style.color = lvl.color;
+    }
+</script>
+</body>
+</html>

@@ -360,6 +360,10 @@
             .calc-layout { grid-template-columns: 1fr; }
             .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
             .time-options { grid-template-columns: 1fr; }
+            .notif-dropdown {
+                width: calc(100vw - 32px);
+                right: -60px;
+            }
         }
     </style>
 </head>
@@ -376,7 +380,7 @@
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                 </svg>
-                <span class="notif-badge" id="notifBadge">3</span>
+                <span class="notif-badge" id="notifBadge" style="display:none">0</span>
             </button>
             <div class="notif-dropdown" id="notifDd">
                 <div class="notif-header">
@@ -384,35 +388,8 @@
                     <button class="notif-clear" onclick="clearNotifs()">Hammasini o'qish</button>
                 </div>
                 <div id="notifList">
-                    <div class="notif-item unread">
-                        <div class="notif-icon blue">🎯</div>
-                        <div class="notif-text">
-                            <div class="notif-text-title">Yangi test qo'shildi</div>
-                            <div class="notif-text-desc">May 2025 V.1 endi mavjud — sinab ko'ring!</div>
-                            <div class="notif-time">5 daqiqa oldin</div>
-                        </div>
-                        <div class="notif-dot"></div>
-                    </div>
-                    <div class="notif-item unread">
-                        <div class="notif-icon gold">📊</div>
-                        <div class="notif-text">
-                            <div class="notif-text-title">Score Calculator yangilandi</div>
-                            <div class="notif-text-desc">Yangi hisoblash usuli qo'shildi.</div>
-                            <div class="notif-time">1 soat oldin</div>
-                        </div>
-                        <div class="notif-dot"></div>
-                    </div>
-                    <div class="notif-item unread">
-                        <div class="notif-icon green">✅</div>
-                        <div class="notif-text">
-                            <div class="notif-text-title">Xush kelibsiz!</div>
-                            <div class="notif-text-desc">SAT Islomxon platformasiga xush kelibsiz.</div>
-                            <div class="notif-time">Bugun</div>
-                        </div>
-                        <div class="notif-dot"></div>
-                    </div>
+                    <div class="notif-empty">🔔 Bildirishnomalar yo'q</div>
                 </div>
-                <div class="notif-footer"><a href="#">Barcha bildirishnomalar</a></div>
             </div>
         </div>
         <div class="avatar-wrap">

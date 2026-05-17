@@ -32,11 +32,11 @@
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 200;
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 32px; height: 56px;
+            padding: 0 20px; height: 52px;
             background: var(--white);
             border-bottom: 1px solid var(--border);
         }
-        .logo { font-weight: 800; font-size: 1.1rem; color: var(--text); text-decoration: none; }
+        .logo { font-weight: 800; font-size: 1rem; color: var(--text); text-decoration: none; }
         .logo span { color: var(--accent); }
         .nav-right { display: flex; align-items: center; gap: 8px; }
         .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; cursor: pointer; font-family: var(--font); font-weight: 600; transition: all 0.18s; text-decoration: none; border-radius: 8px; font-size: 0.85rem; }
@@ -136,7 +136,24 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 0.7rem; font-weight: 800; color: #fff; flex-shrink: 0;
         }
-        .av-name { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+        .av-name { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+
+        /* Mobile tab nav below topbar */
+        .mobile-tabnav {
+            display: none;
+            position: fixed; top: 52px; left: 0; right: 0; z-index: 190;
+            background: var(--white); border-bottom: 1px solid var(--border);
+            overflow-x: auto; scrollbar-width: none;
+        }
+        .mobile-tabnav::-webkit-scrollbar { display: none; }
+        .mobile-tabnav-inner { display: flex; min-width: max-content; padding: 0 12px; }
+        .mtab-btn {
+            padding: 10px 14px; font-size: 0.8rem; font-weight: 600;
+            color: var(--muted); background: none; border: none;
+            border-bottom: 2px solid transparent; cursor: pointer;
+            font-family: var(--font); white-space: nowrap; transition: all 0.15s;
+        }
+        .mtab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
         .av-chevron { font-size: 0.6rem; color: var(--muted); margin-left: 2px; }
         .dropdown {
             position: absolute; top: calc(100% + 6px); right: 0;
@@ -163,7 +180,7 @@
         .dd-dot.green { background: var(--green); }
 
         /* ── LAYOUT ── */
-        .layout { display: flex; padding-top: 56px; min-height: 100vh; }
+        .layout { display: flex; padding-top: 52px; min-height: 100vh; }
 
         /* Sidebar */
         .sidebar {
@@ -377,11 +394,14 @@
 
         @media (max-width: 900px) {
             .sidebar { display: none; }
+            .mobile-tabnav { display: block; }
+            .av-name { display: none; }
+            .layout { padding-top: 94px; }
             .main-content { margin-left: 0; padding: 16px; }
             .calc-layout { grid-template-columns: 1fr; }
             .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
             .time-options { grid-template-columns: 1fr 1fr; }
-            .notif-dropdown { width: calc(100vw - 32px); right: -52px; }
+            .notif-dropdown { width: calc(100vw - 24px); right: -40px; }
             /* Modal full screen on mobile */
             .modal {
                 width: 100% !important; max-width: 100% !important;
@@ -443,6 +463,16 @@
         </div>
     </div>
 </nav>
+
+<!-- MOBILE TAB NAV -->
+<div class="mobile-tabnav">
+    <div class="mobile-tabnav-inner">
+        <button class="mtab-btn active" id="mtab-practice" onclick="setTab('practice')">📝 Testlar</button>
+        <button class="mtab-btn" id="mtab-history" onclick="setTab('history')">📊 Test Tarixi</button>
+        <button class="mtab-btn" id="mtab-studyplan" onclick="setTab('studyplan')">📅 O'quv Rejasi</button>
+        <button class="mtab-btn" id="mtab-calc" onclick="setTab('calc')">🧮 Score Calc</button>
+    </div>
+</div>
 
 <div class="layout">
     <!-- SIDEBAR -->
@@ -963,6 +993,10 @@
         const sidebarMap = { practice: 0, history: 1, studyplan: 2, calc: 3 };
         const items = document.querySelectorAll('.sidebar-item');
         if (items[sidebarMap[name]]) items[sidebarMap[name]].classList.add('active');
+        // Sync mobile tab nav
+        document.querySelectorAll('.mtab-btn').forEach(b => b.classList.remove('active'));
+        const mtab = document.getElementById('mtab-' + name);
+        if (mtab) { mtab.classList.add('active'); mtab.scrollIntoView({inline:'center', behavior:'smooth'}); }
         window.scrollTo(0, 0);
     }
 

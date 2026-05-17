@@ -114,6 +114,15 @@
             background: var(--accent); color: #fff; border-color: var(--accent);
         }
 
+        /* Schedule modal day buttons */
+        .sch-day {
+            aspect-ratio:1;width:100%;border-radius:10px;border:1.5px solid var(--border);
+            background:var(--white);color:var(--text);font-size:0.78rem;font-weight:700;
+            cursor:pointer;font-family:var(--font);transition:all 0.15s;padding:8px 0;
+        }
+        .sch-day:hover { border-color:var(--accent);color:var(--accent); }
+        .sch-day.selected { background:var(--accent);color:#fff;border-color:var(--accent); }
+
         /* Avatar dropdown */
         .avatar-wrap { position: relative; }
         .avatar-btn {
@@ -581,55 +590,85 @@
         <!-- ── PANEL: STUDY PLAN ── -->
         <div class="tab-panel" id="panel-studyplan">
             <!-- Reminder toast -->
-            <div id="reminderToast" style="display:none;position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:9999;background:#1e40af;color:#fff;padding:14px 24px;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,0.18);font-size:0.9rem;font-weight:600;display:flex;align-items:center;gap:10px;animation:slideDown 0.3s ease">
+            <div id="reminderToast" style="display:none;position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:9999;background:#1e40af;color:#fff;padding:14px 24px;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,0.18);font-size:0.9rem;font-weight:600;align-items:center;gap:10px;">
                 <span style="font-size:1.2rem">🔔</span>
                 <span id="reminderMsg">O'qish vaqti keldi!</span>
                 <button onclick="document.getElementById('reminderToast').style.display='none'" style="margin-left:12px;background:rgba(255,255,255,0.2);border:none;color:#fff;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:0.8rem">✕</button>
             </div>
 
-            <div class="card" style="margin-bottom:18px">
-                <div style="font-size:1.05rem;font-weight:800;margin-bottom:4px">📅 O'qish Rejasi</div>
-                <div style="font-size:0.83rem;color:var(--muted);margin-bottom:20px">Muntazam mashg'ulot kunlari va vaqtini belgilang — eslatma berish uchun</div>
-
-                <!-- Day picker -->
-                <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">Qaysi kunlari mashg'ulot o'tkazasiz?</div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px" id="dayPicker">
-                    <button class="day-btn" data-day="1" onclick="toggleDay(this)">Dush</button>
-                    <button class="day-btn" data-day="2" onclick="toggleDay(this)">Sesh</button>
-                    <button class="day-btn" data-day="3" onclick="toggleDay(this)">Chor</button>
-                    <button class="day-btn" data-day="4" onclick="toggleDay(this)">Pay</button>
-                    <button class="day-btn" data-day="5" onclick="toggleDay(this)">Juma</button>
-                    <button class="day-btn" data-day="6" onclick="toggleDay(this)">Shan</button>
-                    <button class="day-btn" data-day="0" onclick="toggleDay(this)">Yak</button>
+            <div class="card">
+                <div class="study-plan-hero">
+                    <div style="width:52px;height:52px;background:var(--bg);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.3rem;color:var(--muted)">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <h3>Shaxsiy O'quv Rejasi</h3>
+                    <p>Maqsad ballingiz va mavjud vaqtingiz asosida maxsus o'quv rejasi tuzing. Har bir o'quvchi uchun alohida jadval.</p>
+                    <button class="btn-create" onclick="openScheduleModal()">O'quv Rejasi Tuzish →</button>
                 </div>
-
-                <!-- Time picker -->
-                <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">Qaysi soatda boshlaysiz?</div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px" id="timePicker">
-                    <button class="time-btn" data-hour="7" onclick="toggleTime(this)">07:00</button>
-                    <button class="time-btn" data-hour="8" onclick="toggleTime(this)">08:00</button>
-                    <button class="time-btn" data-hour="9" onclick="toggleTime(this)">09:00</button>
-                    <button class="time-btn" data-hour="10" onclick="toggleTime(this)">10:00</button>
-                    <button class="time-btn" data-hour="12" onclick="toggleTime(this)">12:00</button>
-                    <button class="time-btn" data-hour="14" onclick="toggleTime(this)">14:00</button>
-                    <button class="time-btn" data-hour="16" onclick="toggleTime(this)">16:00</button>
-                    <button class="time-btn" data-hour="18" onclick="toggleTime(this)">18:00</button>
-                    <button class="time-btn" data-hour="19" onclick="toggleTime(this)">19:00</button>
-                    <button class="time-btn" data-hour="20" onclick="toggleTime(this)">20:00</button>
-                    <button class="time-btn" data-hour="21" onclick="toggleTime(this)">21:00</button>
+                <!-- Saved summary -->
+                <div id="scheduleSummary" style="display:none;margin-top:0;padding-top:20px;border-top:1px solid var(--border)">
+                    <div style="font-size:0.85rem;font-weight:700;margin-bottom:10px;color:var(--text)">📋 Sizning rejangiz</div>
+                    <div id="summaryContent" style="font-size:0.83rem;color:var(--muted);line-height:2"></div>
+                    <button onclick="openScheduleModal()" style="margin-top:12px;background:none;border:1.5px solid var(--border);border-radius:8px;padding:7px 16px;font-size:0.8rem;font-weight:600;cursor:pointer;font-family:var(--font);color:var(--text)">✏️ O'zgartirish</button>
                 </div>
-
-                <!-- Save button -->
-                <button onclick="saveSchedule()" style="background:var(--accent);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:0.875rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:opacity 0.15s" onmouseover="this.style.opacity=0.88" onmouseout="this.style.opacity=1">
-                    💾 Rejani saqlash
-                </button>
-                <div id="saveMsg" style="display:none;margin-top:12px;color:#16a34a;font-size:0.83rem;font-weight:600">✅ Reja saqlandi! Belgilangan vaqtda eslatma beriladi.</div>
             </div>
+        </div>
 
-            <!-- Summary card -->
-            <div class="card" id="scheduleSummary" style="display:none">
-                <div style="font-size:0.9rem;font-weight:700;margin-bottom:12px">📋 Sizning rejangiz</div>
-                <div id="summaryContent" style="font-size:0.85rem;color:var(--muted);line-height:1.8"></div>
+        <!-- ── SCHEDULE MODAL ── -->
+        <div id="scheduleModalOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;align-items:center;justify-content:center;padding:16px;">
+            <div style="background:var(--white);border-radius:20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,0.18);">
+                <!-- Header -->
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px 0;">
+                    <div style="font-size:1rem;font-weight:800">📅 O'quv Rejasi Tuzish</div>
+                    <button onclick="closeScheduleModal()" style="background:var(--bg);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;color:var(--muted)">✕</button>
+                </div>
+                <div style="padding:20px 24px;">
+
+                    <!-- Days -->
+                    <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">Mashg'ulot kunlari</div>
+                    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:22px">
+                        <button class="sch-day" data-day="1" onclick="toggleSchDay(this)">D</button>
+                        <button class="sch-day" data-day="2" onclick="toggleSchDay(this)">S</button>
+                        <button class="sch-day" data-day="3" onclick="toggleSchDay(this)">Ch</button>
+                        <button class="sch-day" data-day="4" onclick="toggleSchDay(this)">P</button>
+                        <button class="sch-day" data-day="5" onclick="toggleSchDay(this)">J</button>
+                        <button class="sch-day" data-day="6" onclick="toggleSchDay(this)">Sh</button>
+                        <button class="sch-day" data-day="0" onclick="toggleSchDay(this)">Y</button>
+                    </div>
+
+                    <!-- Clock -->
+                    <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px">Mashg'ulot vaqti</div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:22px;background:var(--bg);border-radius:16px;padding:16px 0;">
+                        <!-- Hours -->
+                        <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                            <button onclick="changeHour(1)" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--accent);padding:4px 16px">▲</button>
+                            <div id="clockHour" style="font-size:2.4rem;font-weight:800;color:var(--text);min-width:64px;text-align:center;line-height:1">08</div>
+                            <button onclick="changeHour(-1)" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--accent);padding:4px 16px">▼</button>
+                        </div>
+                        <div style="font-size:2.4rem;font-weight:800;color:var(--muted);padding:0 4px;margin-bottom:4px">:</div>
+                        <!-- Minutes -->
+                        <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                            <button onclick="changeMin(1)" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--accent);padding:4px 16px">▲</button>
+                            <div id="clockMin" style="font-size:2.4rem;font-weight:800;color:var(--text);min-width:64px;text-align:center;line-height:1">00</div>
+                            <button onclick="changeMin(-1)" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--accent);padding:4px 16px">▼</button>
+                        </div>
+                    </div>
+
+                    <!-- Test select -->
+                    <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">Test tanlang</div>
+                    <select id="schTestSelect" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:0.875rem;font-family:var(--font);color:var(--text);background:var(--white);margin-bottom:22px;outline:none;">
+                        <option value="">— Test tanlang —</option>
+                        <option value="Oct 2024 V.1">Oct 2024 V.1 (To'liq test)</option>
+                        <option value="Dec 2024 V.2">Dec 2024 V.2 (To'liq test)</option>
+                        <option value="Mar 2025 V.1">Mar 2025 V.1 (To'liq test)</option>
+                        <option value="Math — Algebra">Math Modul — Algebra</option>
+                        <option value="Reading & Writing">Reading & Writing Modul</option>
+                    </select>
+
+                    <!-- Save -->
+                    <button onclick="saveSchedule()" style="width:100%;background:var(--accent);color:#fff;border:none;border-radius:12px;padding:13px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:var(--font);">💾 Rejani saqlash</button>
+                    <div id="schSaveMsg" style="display:none;margin-top:10px;text-align:center;color:#16a34a;font-size:0.83rem;font-weight:600">✅ Reja saqlandi!</div>
+                </div>
             </div>
         </div>
 
@@ -820,72 +859,89 @@
 
     // ── SCHEDULE PLANNER ──
     const dayNames = { 0:'Yakshanba', 1:'Dushanba', 2:'Seshanba', 3:'Chorshanba', 4:'Payshanba', 5:'Juma', 6:'Shanba' };
-    let selectedDays = new Set();
-    let selectedHours = new Set();
+    let schDays = new Set();
+    let schHour = 8, schMin = 0;
 
-    function toggleDay(btn) {
+    function openScheduleModal() {
+        document.getElementById('scheduleModalOverlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    function closeScheduleModal() {
+        document.getElementById('scheduleModalOverlay').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+    document.getElementById('scheduleModalOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeScheduleModal();
+    });
+
+    function toggleSchDay(btn) {
         const d = parseInt(btn.dataset.day);
-        if (selectedDays.has(d)) { selectedDays.delete(d); btn.classList.remove('selected'); }
-        else { selectedDays.add(d); btn.classList.add('selected'); }
+        if (schDays.has(d)) { schDays.delete(d); btn.classList.remove('selected'); }
+        else { schDays.add(d); btn.classList.add('selected'); }
     }
-    function toggleTime(btn) {
-        const h = parseInt(btn.dataset.hour);
-        if (selectedHours.has(h)) { selectedHours.delete(h); btn.classList.remove('selected'); }
-        else { selectedHours.add(h); btn.classList.add('selected'); }
+    function changeHour(dir) {
+        schHour = (schHour + dir + 24) % 24;
+        document.getElementById('clockHour').textContent = String(schHour).padStart(2,'0');
     }
+    function changeMin(dir) {
+        schMin = (schMin + dir * 5 + 60) % 60;
+        document.getElementById('clockMin').textContent = String(schMin).padStart(2,'0');
+    }
+
     function saveSchedule() {
-        if (selectedDays.size === 0 || selectedHours.size === 0) {
-            alert("Iltimos, kamida 1 kun va 1 soat tanlang!");
-            return;
-        }
-        const data = { days: [...selectedDays], hours: [...selectedHours] };
+        if (schDays.size === 0) { alert("Iltimos, kamida 1 kun tanlang!"); return; }
+        const test = document.getElementById('schTestSelect').value;
+        const data = { days: [...schDays], hour: schHour, min: schMin, test };
         localStorage.setItem('satSchedule', JSON.stringify(data));
-        document.getElementById('saveMsg').style.display = 'block';
-        setTimeout(() => document.getElementById('saveMsg').style.display = 'none', 3000);
-        renderSummary(data);
+        document.getElementById('schSaveMsg').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('schSaveMsg').style.display = 'none';
+            closeScheduleModal();
+            renderSummary(data);
+        }, 1200);
     }
+
     function renderSummary(data) {
-        const summary = document.getElementById('scheduleSummary');
-        const content = document.getElementById('summaryContent');
         const daysStr = data.days.sort().map(d => dayNames[d]).join(', ');
-        const hoursStr = data.hours.sort((a,b)=>a-b).map(h => h+':00').join(', ');
-        content.innerHTML = `<div style="margin-bottom:6px">📆 <b>Kunlar:</b> ${daysStr}</div><div>⏰ <b>Soatlar:</b> ${hoursStr}</div>`;
-        summary.style.display = 'block';
+        const timeStr = String(data.hour).padStart(2,'0') + ':' + String(data.min).padStart(2,'0');
+        const testStr = data.test ? `📝 <b>Test:</b> ${data.test}` : '';
+        document.getElementById('summaryContent').innerHTML =
+            `<div>📆 <b>Kunlar:</b> ${daysStr}</div><div>⏰ <b>Vaqt:</b> ${timeStr}</div>${testStr ? '<div>'+testStr+'</div>' : ''}`;
+        document.getElementById('scheduleSummary').style.display = 'block';
     }
+
     function loadSchedule() {
         const raw = localStorage.getItem('satSchedule');
         if (!raw) return;
         const data = JSON.parse(raw);
-        data.days.forEach(d => {
-            selectedDays.add(d);
-            const btn = document.querySelector(`.day-btn[data-day="${d}"]`);
+        schHour = data.hour || 8; schMin = data.min || 0;
+        document.getElementById('clockHour').textContent = String(schHour).padStart(2,'0');
+        document.getElementById('clockMin').textContent = String(schMin).padStart(2,'0');
+        (data.days || []).forEach(d => {
+            schDays.add(d);
+            const btn = document.querySelector(`.sch-day[data-day="${d}"]`);
             if (btn) btn.classList.add('selected');
         });
-        data.hours.forEach(h => {
-            selectedHours.add(h);
-            const btn = document.querySelector(`.time-btn[data-hour="${h}"]`);
-            if (btn) btn.classList.add('selected');
-        });
+        if (data.test) document.getElementById('schTestSelect').value = data.test;
         renderSummary(data);
     }
+
     function checkReminder() {
         const raw = localStorage.getItem('satSchedule');
         if (!raw) return;
         const data = JSON.parse(raw);
         const now = new Date();
-        const curDay = now.getDay();
-        const curHour = now.getHours();
-        const curMin = now.getMinutes();
-        if (data.days.includes(curDay) && data.hours.includes(curHour) && curMin < 5) {
+        if (data.days.includes(now.getDay()) && now.getHours() === data.hour && now.getMinutes() === data.min) {
+            const testTxt = data.test ? ` — ${data.test} testini boshlang!` : ' — O\'qishni boshlang!';
+            document.getElementById('reminderMsg').textContent = `⏰ ${String(data.hour).padStart(2,'0')}:${String(data.min).padStart(2,'0')}${testTxt}`;
             const toast = document.getElementById('reminderToast');
-            document.getElementById('reminderMsg').textContent = `⏰ ${curHour}:00 — O'qish vaqti keldi! SAT testini boshlang.`;
             toast.style.display = 'flex';
             setTimeout(() => toast.style.display = 'none', 15000);
         }
     }
     loadSchedule();
     checkReminder();
-    setInterval(checkReminder, 60000);
+    setInterval(checkReminder, 30000);
 
     // Nav dropdown
     function toggleDd() { document.getElementById('dd').classList.toggle('open'); }

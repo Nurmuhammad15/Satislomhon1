@@ -45,6 +45,62 @@
         .btn-danger { background: #fef2f2; color: #dc2626; padding: 7px 14px; border: 1px solid #fecaca; }
         .btn-danger:hover { background: #fee2e2; }
 
+        /* Notification bell */
+        .notif-wrap { position: relative; }
+        .notif-btn {
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 1px solid var(--border); background: var(--white);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.18s; position: relative;
+        }
+        .notif-btn:hover { background: var(--bg); border-color: #cbd5e1; }
+        .notif-btn svg { width: 16px; height: 16px; color: var(--muted); }
+        .notif-badge {
+            position: absolute; top: -3px; right: -3px;
+            width: 16px; height: 16px; background: #ef4444; border-radius: 50%;
+            border: 2px solid var(--white);
+            font-size: 0.6rem; font-weight: 800; color: #fff;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .notif-dropdown {
+            position: absolute; top: calc(100% + 8px); right: 0;
+            background: var(--white); border: 1px solid var(--border); border-radius: 14px;
+            width: 300px; box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+            opacity: 0; pointer-events: none; transform: translateY(-4px);
+            transition: all 0.18s; z-index: 300;
+        }
+        .notif-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+        .notif-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 16px; border-bottom: 1px solid var(--border);
+        }
+        .notif-header-title { font-weight: 700; font-size: 0.875rem; }
+        .notif-clear { font-size: 0.75rem; color: var(--accent); font-weight: 600; cursor: pointer; background: none; border: none; font-family: var(--font); }
+        .notif-clear:hover { text-decoration: underline; }
+        .notif-item {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 12px 16px; transition: background 0.15s; cursor: pointer;
+        }
+        .notif-item:hover { background: var(--bg); }
+        .notif-item.unread { background: var(--accent-light); }
+        .notif-item.unread:hover { background: #dbeafe; }
+        .notif-icon {
+            width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+        }
+        .notif-icon.blue { background: var(--accent-light); }
+        .notif-icon.gold { background: var(--gold-bg); }
+        .notif-icon.green { background: var(--green-bg); }
+        .notif-text { flex: 1; }
+        .notif-text-title { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+        .notif-text-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+        .notif-time { font-size: 0.68rem; color: var(--muted); margin-top: 4px; }
+        .notif-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+        .notif-empty { padding: 32px 16px; text-align: center; color: var(--muted); font-size: 0.83rem; }
+        .notif-footer { padding: 10px 16px; border-top: 1px solid var(--border); text-align: center; }
+        .notif-footer a { font-size: 0.78rem; color: var(--accent); font-weight: 600; text-decoration: none; }
+        .notif-footer a:hover { text-decoration: underline; }
+
         /* Avatar dropdown */
         .avatar-wrap { position: relative; }
         .avatar-btn {
@@ -312,6 +368,52 @@
 <nav>
     <a href="/" class="logo">SAT <span>Islomxon</span></a>
     <div class="nav-right">
+        <!-- Notification Bell -->
+        <div class="notif-wrap">
+            <button class="notif-btn" onclick="toggleNotif()" id="notifBtn" title="Bildirishnomalar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                <span class="notif-badge" id="notifBadge">3</span>
+            </button>
+            <div class="notif-dropdown" id="notifDd">
+                <div class="notif-header">
+                    <span class="notif-header-title">Bildirishnomalar</span>
+                    <button class="notif-clear" onclick="clearNotifs()">Hammasini o'qish</button>
+                </div>
+                <div id="notifList">
+                    <div class="notif-item unread">
+                        <div class="notif-icon blue">🎯</div>
+                        <div class="notif-text">
+                            <div class="notif-text-title">Yangi test qo'shildi</div>
+                            <div class="notif-text-desc">May 2025 V.1 endi mavjud — sinab ko'ring!</div>
+                            <div class="notif-time">5 daqiqa oldin</div>
+                        </div>
+                        <div class="notif-dot"></div>
+                    </div>
+                    <div class="notif-item unread">
+                        <div class="notif-icon gold">📊</div>
+                        <div class="notif-text">
+                            <div class="notif-text-title">Score Calculator yangilandi</div>
+                            <div class="notif-text-desc">Yangi hisoblash usuli qo'shildi.</div>
+                            <div class="notif-time">1 soat oldin</div>
+                        </div>
+                        <div class="notif-dot"></div>
+                    </div>
+                    <div class="notif-item unread">
+                        <div class="notif-icon green">✅</div>
+                        <div class="notif-text">
+                            <div class="notif-text-title">Xush kelibsiz!</div>
+                            <div class="notif-text-desc">SAT Islomxon platformasiga xush kelibsiz.</div>
+                            <div class="notif-time">Bugun</div>
+                        </div>
+                        <div class="notif-dot"></div>
+                    </div>
+                </div>
+                <div class="notif-footer"><a href="#">Barcha bildirishnomalar</a></div>
+            </div>
+        </div>
         <div class="avatar-wrap">
             <button class="avatar-btn" onclick="toggleDd()" id="avBtn">
                 <div class="av-circle">{{ user.get_full_name|default:user.username|slice:":2"|upper }}</div>
@@ -669,6 +771,22 @@
 </div>
 
 <script>
+    // Notification bell
+    function toggleNotif() { 
+        document.getElementById('notifDd').classList.toggle('open');
+        document.getElementById('dd').classList.remove('open');
+    }
+    function clearNotifs() {
+        document.querySelectorAll('.notif-item').forEach(i => i.classList.remove('unread'));
+        document.querySelectorAll('.notif-dot').forEach(d => d.style.display = 'none');
+        document.getElementById('notifBadge').style.display = 'none';
+    }
+    document.addEventListener('click', e => {
+        const btn = document.getElementById('notifBtn');
+        const dd = document.getElementById('notifDd');
+        if (!btn.contains(e.target) && !dd.contains(e.target)) dd.classList.remove('open');
+    });
+
     // Nav dropdown
     function toggleDd() { document.getElementById('dd').classList.toggle('open'); }
     document.addEventListener('click', e => {

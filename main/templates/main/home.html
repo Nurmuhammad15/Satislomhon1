@@ -46,8 +46,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 60px;
-            background: rgba(255,255,255,0.92);
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.97);
             backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
         }
@@ -396,11 +396,19 @@
             .hero { padding: 80px 20px 50px; min-height: auto; }
             .hero-inner { grid-template-columns: 1fr; gap: 0; }
             .hero-visual { display: none; }
-            .hero h1 { font-size: 2.1rem; }
+            .hero h1 { font-size: 2.4rem !important; line-height: 1.2; }
+            .hero p { font-size: 1rem; }
+            .btn-hero { padding: 14px 28px; font-size: 1rem; }
+            .btn-outline-hero { padding: 14px 24px; font-size: 1rem; }
+            .hero-actions { flex-direction: column; gap: 10px; }
+            .hero-actions a { text-align: center; }
             .stats-strip { padding: 36px 20px; }
             .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 0; }
             .stat-item { border-right: none; padding-bottom: 16px; }
+            .stat-num { font-size: 1.8rem; }
+            .stat-label { font-size: 0.75rem; }
             section { padding: 56px 20px; }
+            .section-title { font-size: 1.9rem !important; }
             .courses-grid { grid-template-columns: 1fr; max-width: 100%; }
             .resources-split, .faq-split, .about-grid, .contact-split { grid-template-columns: 1fr; gap: 32px; }
             .calc-inputs { grid-template-columns: 1fr; }
@@ -423,8 +431,10 @@
     <div class="nav-cta">
         {% if user.is_authenticated %}
         <div class="user-avatar-wrap" style="position:relative">
-            <div class="user-avatar" id="userAvatarBtn" onclick="toggleDropdown()" title="{{ user.get_full_name|default:user.username }}" style="width:38px;height:38px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:0.85rem;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid var(--border);transition:border-color 0.2s,box-shadow 0.2s;user-select:none;">
-                {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+            <div onclick="toggleDropdown()" style="display:flex;align-items:center;gap:7px;cursor:pointer;padding:5px 10px 5px 5px;border-radius:50px;border:1.5px solid var(--border);background:var(--white);">
+                <div style="width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;">{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}</div>
+                <span style="font-size:0.82rem;font-weight:600;color:var(--text);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ user.get_full_name|default:user.username }}</span>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--muted)"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
             <div class="user-dropdown" id="userDropdown" style="position:absolute;top:calc(100% + 10px);right:0;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:8px;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,0.1);display:none;z-index:200;">
                 <div style="padding:10px 12px 14px;border-bottom:1px solid var(--border);margin-bottom:6px;">

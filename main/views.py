@@ -9,7 +9,10 @@ from .forms import ContactForm, LoginForm, RegisterForm
 def home(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
-    
+
+    courses = Course.objects.filter(is_active=True)
+    stats = Statistic.objects.all()
+
     faqs = [
         {"q": "SAT nima va nima uchun kerak?", "a": "SAT (Scholastic Assessment Test) — Amerika va dunyo universitetlariga kirish uchun zarur bo'lgan standartlashtirilgan imtihon. Ko'pchilik yetakchi universitetlar SAT ballini talab qiladi."},
         {"q": "SAT imtihoni qancha vaqt davom etadi?", "a": "SAT imtihoni 2 soat 14 daqiqadan 3 soatgacha davom etadi, test markazi politikasiga qarab."},

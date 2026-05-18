@@ -63,7 +63,7 @@
             display: flex; align-items: center; justify-content: center;
         }
         .notif-dropdown {
-            position: absolute; top: calc(100% + 8px); right: 0;
+            position: fixed; top: 52px; right: 12px;
             background: var(--white); border: 1px solid var(--border); border-radius: 14px;
             width: 300px; box-shadow: 0 8px 28px rgba(0,0,0,0.1);
             opacity: 0; pointer-events: none; transform: translateY(-4px);
@@ -236,9 +236,10 @@
 
         /* Chart placeholder */
         .chart-area {
-            height: 140px; display: flex; align-items: center; justify-content: center;
+            min-height: 140px; display: flex; align-items: center; justify-content: center;
             color: var(--muted); font-size: 0.83rem; border-radius: 8px;
-            background: var(--bg);
+            background: var(--bg); overflow: hidden; box-sizing: border-box;
+            word-break: break-word;
         }
 
         /* Practice Tests */
@@ -401,7 +402,7 @@
             .calc-layout { grid-template-columns: 1fr; }
             .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
             .time-options { grid-template-columns: 1fr 1fr; }
-            .notif-dropdown { width: calc(100vw - 24px); right: -40px; }
+            .notif-dropdown { width: calc(100vw - 24px); right: 12px; left: 12px; }
             /* Modal full screen on mobile */
             .modal {
                 width: 100% !important; max-width: 100% !important;
@@ -598,7 +599,7 @@
                     <div class="chart-area" style="flex-direction:column;gap:12px;padding:24px">
                         <div style="font-size:2rem">📈</div>
                         <div style="font-weight:700;font-size:0.9rem;color:var(--text)">Hozircha ma'lumot yo'q</div>
-                        <div style="font-size:0.8rem;color:var(--muted);text-align:center;max-width:200px">Birinchi testni yechganingizdan so'ng ball dinamikasi shu yerda ko'rinadi</div>
+                        <div style="font-size:0.8rem;color:var(--muted);text-align:center;max-width:100%;padding:0 8px;word-break:break-word">Birinchi testni yechgach ball dinamikasi ko'rinadi</div>
                     </div>
                 </div>
                 <div class="card">
@@ -607,7 +608,7 @@
                     <div class="chart-area" style="flex-direction:column;gap:12px;padding:24px">
                         <div style="font-size:2rem">🎯</div>
                         <div style="font-weight:700;font-size:0.9rem;color:var(--text)">Modul bo'yicha aniqlik</div>
-                        <div style="font-size:0.8rem;color:var(--muted);text-align:center;max-width:220px">Reading, Writing va Math bo'yicha aniqlik foizingiz test yechgach ko'rinadi</div>
+                        <div style="font-size:0.8rem;color:var(--muted);text-align:center;max-width:100%;padding:0 8px;word-break:break-word">Test yechgach modul bo'yicha aniqlik ko'rinadi</div>
                     </div>
                 </div>
             </div>
@@ -617,7 +618,7 @@
                 <div class="chart-area" style="flex-direction:column;gap:12px;padding:24px">
                         <div style="font-size:2rem">⏱️</div>
                         <div style="font-weight:700;font-size:0.9rem;color:var(--text)">Vaqt statistikasi</div>
-                        <div style="font-size:0.8rem;color:var(--muted);text-align:center;max-width:220px">Test yechgach har bir modul uchun sarflagan vaqtingiz tahlil qilinadi</div>
+                        <div style="font-size:0.8rem;color:var(--muted);text-align:center;max-width:100%;padding:0 8px;word-break:break-word">Test yechgach vaqt statistikasi ko'rinadi</div>
                     </div>
             </div>
         </div>

@@ -7,8 +7,8 @@ from .models import Course, Statistic
 from .forms import ContactForm, LoginForm, RegisterForm
 
 def home(request):
-    courses = Course.objects.filter(is_active=True)
-    stats = Statistic.objects.all()
+    if request.user.is_authenticated:
+        return redirect('dashboard')
     
     faqs = [
         {"q": "SAT nima va nima uchun kerak?", "a": "SAT (Scholastic Assessment Test) — Amerika va dunyo universitetlariga kirish uchun zarur bo'lgan standartlashtirilgan imtihon. Ko'pchilik yetakchi universitetlar SAT ballini talab qiladi."},
